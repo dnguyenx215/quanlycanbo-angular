@@ -41,7 +41,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-#bootstrap & fontawesome
+#bootstrap & fontawesome ...
 /src/assets/bootstrap523
 /src/assets/bootstrapicons
 /src/assets/fontawesomefree630web
