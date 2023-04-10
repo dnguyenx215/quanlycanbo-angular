@@ -1,0 +1,35 @@
+<div id="thebody">
+
+  <div class="loginBox">
+    <!--         https://cdn-icons-png.flaticon.com/512/295/295128.png-->
+    <img class="user"
+         src="./assets/img/Emblem_of_Vietnam.png"
+         height="100"
+         width="100" alt="none">
+    <section class="mb-5">
+      <h3 class="mb-2">BỘ NỘI VỤ</h3>
+      <h5>HỆ THỐNG QUẢN LÝ CÁN BỘ</h5>
+    </section>
+    <h4 class="mb-3">
+      <i class="fa-solid fa-shield-halved"></i>
+      ĐĂNG NHẬP
+    </h4>
+    <form [formGroup]="loginForm" (ngSubmit)="login()" method="post">
+      <div class="inputBox form-group">
+        <input id="uname" type="text" name="username"
+               class="form-control" formControlName="username"
+               placeholder="Tên đăng nhập">
+      </div>
+      <div class="inputBox form-group">
+        <input id="pass" type="password" name="password"
+               class="form-control" formControlName="password"
+               placeholder="Mật khẩu">
+      </div>
+      <div class="inputBox form-group">
+        <input type="submit" class="form-group" name="login-submit" value="Xác nhận">
+      </div>
+    </form>
+
+    <a href="#">Quên mật khẩu?<br> </a>
+  </div>
+</div>

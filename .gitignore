@@ -40,3 +40,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+#...
+#/src/assets/bootstrap523
+#/src/assets/bootstrapicons
+#/src/assets/fontawesomefree630web

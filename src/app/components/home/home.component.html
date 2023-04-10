@@ -1,0 +1,645 @@
+<h5 class="w-100 text-center mt-2 mb-4">DANH SÁCH TRÍCH NGANG HỒ SƠ</h5>
+<div class="container mt-2" id="main-container">
+  <section class="mb-3 d-flex">
+    <a class="btn btn-sm me-3 btn-outline-success text-decoration-none"
+       style="height: 34px; padding-top: 7px;"
+       id="add-btn-open-modal" (click)="navigate('/addhoso')">
+      <i class="fa-solid fa-plus"></i>
+    </a>
+    <a class="btn btn-sm me-3 btn-outline-secondary text-decoration-none"
+       style="height: 34px; padding-top: 7px;"
+       id="x-btn-open-x" href="/manage">
+      <i class="fa-solid fa-arrows-rotate"></i>
+    </a>
+    <a class="btn btn-sm me-5 btn-outline-danger text-decoration-none"
+       style="height: 34px; cursor: pointer"
+       id="ds-btn-open-luong"
+       routerLink="/ds-luong">
+      Danh sách lương
+    </a>
+
+    <input type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
+           style="height: 36px; cursor: pointer" value="Khen thưởng"
+           id="ds-btn-open-kt" [disabled]="isChecked()"
+           (click)="onOpenModalMulti('khenthuong')">
+    <input type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
+           style="height: 36px; cursor: pointer" value="Kỷ luật"
+           id="ds-btn-open-kl" [disabled]="isChecked()"
+           (click)="onOpenModalMulti('kyluat')">
+    <input type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
+           style="height: 36px; cursor: pointer" value="Đánh giá"
+           id="ds-btn-open-dg" [disabled]="isChecked()"
+           (click)="onOpenModalMulti('danhgia')">
+    <input type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
+           style="height: 36px; cursor: pointer" value="Đào tạo/ bồi dưỡng"
+           id="ds-btn-open-dtbd" [disabled]="isChecked()"
+           (click)="onOpenModalMulti('daotaoboiduong')">
+  </section>
+  <div id="search-form" class="mb-3">
+    <select [(ngModel)]="donViSelected" name="DonVi" id="select-donVi" class="form-select"
+            style="width: 280px; height: 36px;" disabled
+            (change)="onChangeDonVi(donViSelected)"
+            [compareWith]="customCompareDV">
+      <option *ngFor="let item of listDonVi" [ngValue]="item">
+        {{item.tenDonVi}}
+      </option>
+    </select>
+    <input type="hidden" [ngModel]="donViSelected" name="maDonVi">
+    <select [(ngModel)]="phongBanSelected" name="phongBan"
+            id="select-phongBan"
+            class="form-select ms-3"
+            style="width: 280px; height: 36px;"
+            (change)="loadHoSoByPhongBan(phongBanSelected)"
+            [compareWith]="customCompareDV">
+      <option selected disabled [value]="">--- Phòng ban ---</option>
+      <option *ngFor="let item of listPhongBan" [ngValue]="item">
+        {{item.tenPhongBan}}
+      </option>
+    </select>
+    <i class="mx-3 align-content-center justify-content-center mt-1" style="color: rgba(0,0,0,0.5)">||</i>
+    <input type="search" class="form-control me-2" [(ngModel)]="ten"
+           style="width: 300px;"
+           placeholder="Tìm kiếm...">
+    <button class="btn btn-sm btn-outline-success ms-2"
+            style="height: 36px;"
+            (click)="searchName()">
+      <i class="fa-solid fa-magnifying-glass px-1"></i>
+    </button>
+  </div>
+  <table class="table table-striped mb-3 table-hover">
+    <thead class="mt-3" style="background: rgba(36,162,162,0.7)">
+    <tr>
+      <th>___</th>
+      <th>Số hiệu cán bộ</th>
+      <th>Họ và tên</th>
+      <th>Giới tính</th>
+      <th>Ngày sinh</th>
+      <th>Phòng ban</th>
+      <th colspan="2">-- Hành động --</th>
+    </tr>
+    </thead>
+
+    <tbody class="table-info ">
+    <tr *ngFor="let item of listHoSo
+    | paginate: { id: 'pagination', itemsPerPage: 10,
+    currentPage: p, totalItems: listHoSo.length }">
+      <td>
+        <input type="checkbox" class="form-check"
+               name="check-box-menu"
+               (change)="getCheckBoxValue()"
+               id="{{item.idHoSo}}" [value]="item.idHoSo">
+      </td>
+      <td>{{item.soHieuCBCCVC}}</td>
+      <td>{{item.hoVaTen}}</td>
+      <td>{{item.gioiTinh}}</td>
+      <td>{{item.ngaySinh | date:'dd/MM/Y'}}</td>
+      <td>{{item.phongBan.tenPhongBan}}</td>
+      <td>
+        <div class="float-right btn-group btn-group-sm">
+          <a class="btn btn-sm btn-warning tooltips" data-placement="top" data-toggle="tooltip"
+             data-original-title="Edit" (click)="navigateCTHoSo('/chitiethoso', item.idHoSo)">
+            <i class="fa-solid fa-eye"></i>
+          </a>
+          <a class="btn btn-sm btn-danger tooltips" data-placement="top" data-toggle="tooltip"
+             data-original-title="Delete" (click)="onOpenModal(item, 'delete')">
+            <i class="fa-solid fa-eraser"></i>
+          </a>
+          <a class="btn btn-sm btn-primary dropdown-toggle tooltips"
+             data-placement="top" data-toggle="tooltip"
+             href="#" role="button"
+             data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item btn"
+                   data-original-title="KhenThuong" (click)="onOpenModal( item, 'khenthuong')">
+              <i class="fa-regular fa-bookmark"></i>
+              TT Khen thưởng
+            </a></li>
+            <li><a class="dropdown-item btn" data-original-title="KyLuat"
+                   (click)="onOpenModal(item, 'kyluat')">
+              <i class="fa-regular fa-bookmark"></i>
+              TT Kỷ luật
+            </a></li>
+            <li>
+              <a class="dropdown-item btn" data-original-title="KyLuat"
+                 (click)="onOpenModal(item, 'danhgia')">
+                <i class="bi bi-star-half"></i>
+                Đánh giá
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item btn" data-original-title="KyLuat"
+                 (click)="navigateCTHoSo('/chi-tiet-qua-trinh-dao-tao-boi-duong', item.idHoSo)">
+                <i class="fa-solid fa-graduation-cap"></i>
+                QT Đào tạo/ bồi dưỡng
+              </a>
+            </li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
+<nav class="mt-5 text-center w-100">
+  <pagination-controls (pageChange)="p = $event" id="pagination"
+                       previousLabel=""
+                       nextLabel="">
+  </pagination-controls>
+</nav>
+<!-- Modal Delete-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Xoá thông tin</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" style="border: 0; border-radius: 25%;"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn có muốn xoá {{deleteHoSo?.hoVaTen}} không?
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete-form-btn-no" class="btn btn-info" data-bs-dismiss="modal">Không</button>
+        <button type="button" (click)="onDelete(keyId)" class="btn btn-danger">Có</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal KT - KL-->
+<div class="modal fade" id="qdktModal" tabindex="-1" role="dialog"
+     aria-labelledby="qdktModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content w-100">
+      <div class="modal-header">
+        <h5 class="modal-title" id="qdktModalLabel">Lập quyết định khen thưởng</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close"
+                style="border: 0; border-radius: 25%;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addKTForm="ngForm" (ngSubmit)="onAddQDKT(addKTForm)">
+          <div class="mb-3">
+            <input type="hidden" [(ngModel)]="editQD.idHoSo" name="hoSo"
+                   class="form-control" id="Input000Add">
+          </div>
+          <div class="mb-3">
+            <label for="Input2Add" class="form-label">Số quyết định</label>
+            <input type="text" [(ngModel)]="soQuyetDinhGenerate"
+                   name="soQuyetDinh" class="form-control" id="Input2Add" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label for="Input4Add" class="form-label">Hình thức khen thưởng</label>
+            <select id="Input4Add" class="form-select" [ngModel]="HinhThucSelected"
+                    name="noiDungQuyetDinh"
+                    required>
+              <option [value]="null" disabled>--- Chọn hình thức ---</option>
+              <option *ngFor="let item of htKhenThuongList" [ngValue]="item.tenHT">
+                {{item.tenHT}}
+              </option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="Input5Add" class="form-label">Ngày quyết định</label>
+            <input type="date" ngModel name="ngayKy" class="form-control" id="Input5Add" required>
+          </div>
+          <!--          <div class="mb-3">-->
+          <!--            <input type="file" ngModel-->
+          <!--                   name="fileky" [accept]="'application/pdf'"-->
+          <!--                   class="form-control" (change)="getFile($event)"-->
+          <!--                   id="Input6Add">-->
+          <!--          </div>-->
+          <div class="modal-footer">
+            <button type="button" id="add-obj-form"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button [disabled]="addKTForm.invalid" type="submit" class="btn btn-success">
+              Lưu
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="qdktcnModal" tabindex="-1" role="dialog"
+     aria-labelledby="qdktcnModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content w-100">
+      <div class="modal-header">
+        <h5 class="modal-title" id="qdktcnModalLabel">Thông tin khen thưởng</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close"
+                style="border: 0; border-radius: 25%;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addKTForm="ngForm" (ngSubmit)="onAddQDKT(addKTForm)">
+          <div class="mb-3">
+            <input type="hidden" [(ngModel)]="editQD.idHoSo" name="hoSo"
+                   class="form-control" id="Inputcn000Add">
+          </div>
+          <div class="mb-3">
+            <label for="Input23Addcn" class="form-label">Số hiệu CBCCVC</label>
+            <input type="text" [(ngModel)]="editQD.soHieuCBCCVC"
+                   name="soHieuCBCCVC"
+                   class="form-control" id="Input23Addcn" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="Input235Addcn" class="form-label">Họ và tên</label>
+            <input type="text" [(ngModel)]="editQD.hoVaTen"
+                   name="hoVaTen"
+                   class="form-control" id="Input235Addcn" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="Input2Add" class="form-label">Số quyết định</label>
+            <input type="text" [(ngModel)]="editQD.soQuyetDinhKhenThuong"
+                   name="soQuyetDinhKhenThuong"
+                   class="form-control" id="Inputcn2Add" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label for="Inputcn4Add" class="form-label">Hình thức khen thưởng</label>
+            <textarea type="text" [(ngModel)]="editQD.hinhThucKhenThuong"
+                      name="hinhThucKhenThuong"
+                      class="form-control" id="Inputcn4Add" readonly></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="Input5Addcn" class="form-label">Ngày quyết định</label>
+            <input type="date" [(ngModel)]="editQD.ngayKhenThuong"
+                   name="ngayKhenThuong" class="form-control"
+                   id="Input5Addcn" readonly>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="add-obj-form-cn-kt"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <!--            <button [disabled]="true" type="submit" class="btn btn-success">-->
+            <!--              Lưu-->
+            <!--            </button>-->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!---->
+<div class="modal fade" id="qdklModal" tabindex="-1" role="dialog"
+     aria-labelledby="qdklModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content w-100">
+      <div class="modal-header">
+        <h5 class="modal-title" id="qdklModalLabel">Lập quyết định kỷ luật</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close"
+                style="border: 0; border-radius: 25%;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addKLForm="ngForm" (ngSubmit)="onAddQDKL(addKLForm)">
+          <div class="mb-3">
+            <input type="hidden" [(ngModel)]="editQD.idHoSo" name="hoSo"
+                   class="form-control" id="Input000Addkl">
+          </div>
+          <div class="mb-3">
+            <label for="Input2Addlk" class="form-label">Số quyết định</label>
+            <input type="text" [(ngModel)]="soQuyetDinhGenerate"
+                   name="soQuyetDinh" class="form-control" id="Input2Addlk" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="Input4Addlk" class="form-label">Hình thức kỷ luật</label>
+            <select id="Input4Addlk" class="form-select" [ngModel]="HinhThucSelected"
+                    name="noiDungQuyetDinh"
+                    required>
+              <option [value]="null" disabled>--- Chọn hình thức ---</option>
+              <option *ngFor="let item of htKyLuatList" [ngValue]="item.tenHT">
+                {{item.tenHT}}
+              </option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="Input5Addlk" class="form-label">Ngày quyết định</label>
+            <input type="date" ngModel name="ngayKy" class="form-control"
+                   id="Input5Addlk" required>
+          </div>
+          <!--          <div class="mb-3">-->
+          <!--            <label for="Input7Addlk" class="form-label">Người ký</label>-->
+          <!--            <input type="text" ngModel name="nguoiKy" class="form-control" id="Input7Addlk" required>-->
+          <!--          </div>-->
+          <!--          <div class="mb-3">-->
+          <!--            <div class="mb-3">-->
+          <!--              <input type="file" ngModel-->
+          <!--                     name="fileky" [accept]="'application/pdf'"-->
+          <!--                     class="form-control" (change)="getFile($event)"-->
+          <!--                     id="Input8Addlk">-->
+          <!--            </div>-->
+          <!--          </div>-->
+
+          <div class="modal-footer">
+            <button type="button" id="add-obj-form-kl"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button [disabled]="addKLForm.invalid" type="submit" class="btn btn-success">
+              Lưu
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="qdklcnModal" tabindex="-1" role="dialog"
+     aria-labelledby="qdklcnModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content w-100">
+      <div class="modal-header">
+        <h5 class="modal-title" id="qdklcnModalLabel"> Thông tin kỷ luật</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close"
+                style="border: 0; border-radius: 25%;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addKLForm="ngForm" (ngSubmit)="onAddQDKL(addKLForm)">
+          <div class="mb-3">
+            <input type="hidden" [(ngModel)]="editQD.idHoSo" name="idhoSo"
+                   class="form-control" id="Input000Addklcn">
+          </div>
+          <div class="mb-3">
+            <label for="Input2Addlkcni" class="form-label">Số hiệu CBCCVC</label>
+            <input type="text" [(ngModel)]="editQD.soHieuCBCCVC"
+                   name="soHieuCBCCVC" class="form-control" id="Input2Addlkcni" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="Input2Addlkcniht" class="form-label">Họ và tên</label>
+            <input type="text" [(ngModel)]="editQD.hoVaTen"
+                   name="hoVaTen" class="form-control" id="Input2Addlkcniht" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="Input2Addlkcn" class="form-label">Số quyết định</label>
+            <input type="text" [(ngModel)]="editQD.soQuyetDinhKyLuat"
+                   name="soQuyetDinh" class="form-control" id="Input2Addlkcn" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="Input4Addlkcn" class="form-label">Hình thức kỷ luật</label>
+            <textarea type="text" [(ngModel)]="editQD.hinhThucKyLuat"
+                      name="noiDungQuyetDinh"
+                      class="form-control" id="Input4Addlkcn" readonly></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="Input5Addlkcn" class="form-label">Ngày quyết định</label>
+            <input type="date" [(ngModel)]="editQD.ngayKyLuat"
+                   name="ngayKy" class="form-control"
+                   id="Input5Addlkcn" readonly>
+          </div>
+          <!--          <div class="mb-3">-->
+          <!--            <label for="Input7Addlk" class="form-label">Người ký</label>-->
+          <!--            <input type="text" ngModel name="nguoiKy" class="form-control" id="Input7Addlk" required>-->
+          <!--          </div>-->
+          <!--          <div class="mb-3">-->
+          <!--            <div class="mb-3">-->
+          <!--              <input type="file" ngModel-->
+          <!--                     name="fileky" [accept]="'application/pdf'"-->
+          <!--                     class="form-control" (change)="getFile($event)"-->
+          <!--                     id="Input8Addlk">-->
+          <!--            </div>-->
+          <!--          </div>-->
+
+          <div class="modal-footer">
+            <button type="button" id="add-obj-form-kl-cn"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Đánh giá-->
+
+<div class="modal fade" id="qdldgModal" tabindex="-1" role="dialog"
+     aria-labelledby="qdldgModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content w-100">
+      <div class="modal-header">
+        <h5 class="modal-title" id="qdldgModalLabel">Lập đánh giá</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close"
+                style="border: 0; border-radius: 25%;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addDGLForm="ngForm" (ngSubmit)="onAddQDLDG(addDGLForm)">
+          <div class="mb-3">
+            <label for="Input412" class="form-label">Xếp loại đánh giá</label>
+            <select id="Input412" class="form-select"
+                    ngModel name="ndgdanhGia">
+              <option selected disabled>--- Xếp loại ---</option>
+              <option>Hoàn thành xuất sắc nhiệm vụ</option>
+              <option>Hoàn thành tốt nhiệm vụ</option>
+              <option>Hoàn thành nhiệm vụ</option>
+              <option>Không hoàn thành nhiệm vụ</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="Input512Add" class="form-label">Ngày đánh giá</label>
+            <input type="date" ngModel name="ngayGDanhGia" class="form-control"
+                   id="Input512Add" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="obj-form-dgl"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button [disabled]="addDGLForm.invalid"
+                    type="submit" class="btn btn-success">
+              Lưu
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="qddgModal" tabindex="-1" role="dialog"
+     aria-labelledby="qddgModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content w-100">
+      <div class="modal-header">
+        <h5 class="modal-title" id="qddgModalLabel">Thông tin đánh giá</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close"
+                style="border: 0; border-radius: 25%;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addDGForm="ngForm" (ngSubmit)="onAddDG(addDGForm)">
+          <div class="mb-3">
+            <input type="hidden" [(ngModel)]="editQD.idHoSo" name="idHoSo"
+                   class="form-control" id="Input000dg">
+            <label for="Input0dg" class="form-label">Số hiệu CBCCVC</label>
+            <input type="text" [(ngModel)]="editQD.soHieuCBCCVC" name="soHieuCBCCVC"
+                   class="form-control" id="Input0dg" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="Input00dg" class="form-label">Họ và tên</label>
+            <input type="text" [(ngModel)]="editQD.hoVaTen" name="hoVaTen" class="form-control"
+                   id="Input00dg" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="Input001dg" class="form-label">Đơn vị</label>
+            <input type="hidden" [(ngModel)]="editQD.donVi" name="donVi"
+                   class="form-control" id="Input001dg">
+            <input type="text" [(ngModel)]="editQD.donVi.tenDonVi" name="tendonVi"
+                   class="form-control" id="Input001dgdvt" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="Input4dg" class="form-label">Xếp loại đánh giá</label>
+            <select [(ngModel)]="editQD.danhGia" name="danhGia" class="form-select" id="Input4dg" required>
+              <option>Hoàn thành xuất sắc nhiệm vụ</option>
+              <option>Hoàn thành tốt nhiệm vụ</option>
+              <option>Hoàn thành nhiệm vụ</option>
+              <option>Không hoàn thành nhiệm vụ</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="Input5dg" class="form-label">Ngày đánh giá</label>
+            <input type="date" [(ngModel)]="editQD.ngayDanhGia" name="ngayDanhGia" class="form-control" id="Input5dg"
+                   required>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="add-obj-form-dg"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button [disabled]="addDGForm.invalid" type="submit" class="btn btn-success">
+              Lưu
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--  Modal Đào tạo / Bồi dưỡng-->
+<div class="modal fade" id="multidaotaoboiduongModal" tabindex="-1" role="dialog"
+     aria-labelledby="multidaotaoboiduongModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content w-100">
+      <div class="modal-header">
+        <h5 class="modal-title" id="multidaotaoboiduongModalLabel">
+          Quyết định gửi đào tạo/ bồi dưỡng
+        </h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close"
+                style="border: 0; border-radius: 25%;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addQuaTrinhDTBDForm" (ngSubmit)="onAddQuaTrinhDTBD()">
+          <input type="hidden"
+                 formControlName="hoSo">
+          <div class="mb-3">
+            <label for="Input4122" class="form-label">Từ ngày:</label>
+            <input type="date" id="Input4122"
+                   class="form-control" required
+                   formControlName="tuNgay">
+          </div>
+          <div class="mb-3">
+            <label for="Input41322" class="form-label">Đến ngày:</label>
+            <input type="date" id="Input41322"
+                   class="form-control" required
+                   formControlName="denNgay" >
+          </div>
+          <div class="mb-3">
+            <label for="Input5123Add" class="form-label">Cơ sở đào tạo/ bồi dưỡng</label>
+            <input type="text"
+                   formControlName="coSoDaoTaoBoiDuong"
+                   class="form-control"
+                   id="Input5123Add" required>
+          </div>
+          <div class="mb-3">
+            <label for="InputtdtAdd" class="form-label">Trình độ đào tạo/ bồi dưỡng</label>
+            <input type="text"
+                   formControlName="trinhDoDaoTaoBoiDuong" class="form-control"
+                   id="InputtdtAdd" required>
+          </div>
+          <div class="mb-3">
+            <label for="InputtdtcnAdd" class="form-label">Chuyên ngành đào tạo/ bồi dưỡng</label>
+            <input type="text"
+                   formControlName="tenChuyenNganhDaoTaoBoiDuong"
+                   class="form-control"
+                   id="InputtdtcnAdd" required>
+          </div>
+          <div class="mb-3">
+            <label for="InputttdtAdd" class="form-label">Trạng thái đào tạo/ bồi dưỡng</label>
+            <select formControlName="trangThaiDaoTaoBoiDuong" class="form-select"
+                    id="InputttdtAdd" required>
+              <option>Đã hoàn thành</option>
+              <option>Đang đào tạo/ bồi dưỡng</option>
+              <option>Bảo lưu</option>
+              <option>Huỷ bỏ</option>
+              <option>Chờ quyết định</option>
+            </select>
+          </div>
+          <div class="modal-footer mt-5">
+            <button type="button" id="obj-form-mtdtbd"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button [disabled]="addQuaTrinhDTBDForm.invalid"
+                    type="submit" class="btn btn-success">
+              Lưu
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="liveAlertPlaceholder" class="w-25" style="position: fixed; right: 30px; bottom: 16px;"></div>

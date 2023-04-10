@@ -1,0 +1,134 @@
+<h5 class="w-100 text-center mt-2 mb-3">DANH SÁCH LƯƠNG</h5>
+<div class="container mt-2" id="main-container">
+  <section class="d-inline-block">
+    <a class="btn btn-sm me-3 btn-outline-secondary mb-3 text-decoration-none"
+       id="x-btn-open-x" href="/ds-luong">
+      <i class="fa-solid fa-arrows-rotate"></i>
+    </a>
+    <a class="btn btn-sm me-5 btn-outline-primary mb-3 text-decoration-none"
+       id="ds-btn-open-luong" (click)="navigate('/manage')" style="cursor: pointer;">
+      Danh sách hồ sơ
+    </a>
+    <div class="d-flex">
+      <select [(ngModel)]="donViSelected" name="DonVi" id="select-donVi" class="form-select"
+              style="width: 280px; height: 36px;" disabled
+              (change)="onChangeDonVi(donViSelected)"
+              [compareWith]="customCompareDV">
+        <option *ngFor="let item of listDonVi" [ngValue]="item">
+          {{item.tenDonVi}}
+        </option>
+      </select>
+      <input type="hidden" [ngModel]="donViSelected" name="maDonVi">
+      <select [(ngModel)]="phongBanSelected" name="phongBan"
+              id="select-phongBan"
+              class="form-select ms-3"
+              style="width: 280px; height: 36px;"
+              (change)="loadHoSoByPhongBan(phongBanSelected)"
+              [compareWith]="customCompareDV">
+        <option selected disabled>--- Phòng ban ---</option>
+        <option *ngFor="let item of listPhongBan" [ngValue]="item">
+          {{item.tenPhongBan}}
+        </option>
+      </select>
+    </div>
+  </section>
+  <table class="table table-striped mt-3">
+    <thead class="mt-3" style="background: rgba(36,162,162,0.7)">
+    <tr>
+      <th>Số hiệu cán bộ</th>
+      <th>Họ và tên</th>
+      <th>Mã ngạch</th>
+      <th>Bậc lương</th>
+      <th>Hệ số lương</th>
+      <th>Mức lương (VNĐ)</th>
+      <th colspan="2">---</th>
+    </tr>
+    </thead>
+
+    <tbody class="table-info">
+    <tr
+      *ngFor="let item of listHoSo | paginate: { id: 'pagination', itemsPerPage: 10, currentPage: p, totalItems: listHoSo.length }">
+      <td>{{item.soHieuCBCCVC}}</td>
+      <td>{{item.hoVaTen}}</td>
+      <td>{{item.maNgach}}</td>
+      <td>{{item.bacLuong}}</td>
+      <td>{{item.heSoLuong}}</td>
+      <td>{{getMucLuong(item.heSoLuong)}}</td>
+      <td>
+        <div class="float-right btn-group btn-group-sm">
+          <a class="btn btn-sm btn-warning tooltips" data-placement="top" data-toggle="tooltip"
+             data-original-title="Edit" (click)="onOpenEditOrDeleteModal(item, 'edit')">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </a>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <nav class="mt-5 text-center w-100">
+    <pagination-controls (pageChange)="p = $event" id="pagination"
+                         previousLabel=""
+                         nextLabel="">
+    </pagination-controls>
+  </nav>
+</div>
+
+<div id="liveAlertPlaceholder" class="w-25" style="position: fixed; right: 30px; bottom: 16px;"></div>
+
+
+<!-- Modal Update-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Cập nhật lương</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                style="border: 0; border-radius: 25%;"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm">
+          <div class="mb-2">
+            <label for="Input0Edit" class="form-label">Số hiệu CBCCVC:</label>
+            <input type="hidden" ngModel="{{editHoSo.idHoSo}}" name="idHoSo" id="idEdit">
+            <input type="text" ngModel="{{editHoSo.soHieuCBCCVC}}" readonly
+                   name="soHieuCBCCVC" class="form-control" id="Input0Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input2Edit" class="form-label">Mã ngạch</label>
+            <input type="text" ngModel="{{editHoSo.maNgach}}" readonly
+                   name="maNgach" class="form-control" id="Input2Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input3Edit" class="form-label">Bậc lương</label>
+            <input type="number" [(ngModel)]="editHoSo.bacLuong"
+                   name="bacLuong" [min]="1" [max]="12" (change)="tinhHeSo(editHoSo.maNgach)"
+                   class="form-control" id="Input3Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input4Edit" class="form-label">Hệ số</label>
+            <input type="number" [min]="0" [max]="10"
+                   ngModel="{{editHoSo.heSoLuong}}" readonly
+                   name="heSoLuong"
+                   class="form-control" id="Input4Edit">
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="edit-obj-btn-close"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button (click)="onUpdate(editForm.value)" type="submit"
+                    class="btn btn-warning">
+              Lưu
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

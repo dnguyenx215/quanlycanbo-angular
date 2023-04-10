@@ -1,0 +1,39 @@
+<section class="container">
+  <h5 class="text-center my-2">ĐỔI MẬT KHẨU TÀI KHOẢN</h5>
+  <form #tkForm="ngForm">
+    <table class="table w-50 account-table" style="margin: auto">
+      <tbody>
+      <tr>
+        <td>
+          <label class="form-label">Tên đăng nhập:</label>
+          <input type="hidden" class="form-control" ngModel="{{tkInfo.id}}" name="id" readonly>
+          <input type="text" class="form-control" ngModel="{{tkInfo.tenDangNhap}}" name="tenDangNhap" disabled>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label class="form-label">Mật khẩu mới:</label>
+          <input type="password" class="form-control" [(ngModel)]="newPassWd" name="matKhau" required>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label class="form-label">Xác nhận mật khẩu mới:</label>
+          <input type="password" class="form-control" [(ngModel)]="confirmPassWd" name="matKhauMoi" required>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button type="submit" [disabled]="invalidNewPasswd(newPassWd, confirmPassWd)"
+                  class="btn btn-outline-primary mt-3 ms-5" (click)="onUpdate(tkForm.value)">
+            Cập nhật
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </form>
+
+
+  <div id="liveAlertPlaceholder" class="w-25" style="position: fixed; right: 5%; bottom: 5%;"></div>
+</section>

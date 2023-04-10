@@ -1,0 +1,218 @@
+<h5 class="w-100 text-center mt-2">
+  CHI TIẾT QUÁ TRÌNH ĐÀO TẠO/ BỒI DƯỠNG
+</h5>
+<div class="container mt-2" id="main-container">
+  <article class="my-5" style="font-size: 17px">
+    <section class="mb-1"><b>Số hiệu CBCCVC:</b> {{loadHoSo.soHieuCBCCVC}}</section>
+    <section class="mb-1"><b>Họ và tên:</b> {{loadHoSo.hoVaTen}}</section>
+    <section class="mb-1"><b>Đơn vị:</b> {{loadHoSo.phongBan.tenPhongBan}}, {{loadHoSo.donVi.tenDonVi}} - Bộ Nội vụ</section>
+    <section class="mb-1"><b>Trình độ chuyên môn:</b> {{loadHoSo.trinhDoChuyenMon}}</section>
+  </article>
+  <a class="btn btn-sm btn-outline-success mb-3 text-decoration-none"
+     id="add-btn-open-modal"
+     (click)="onOpenModalAdd( 'add')">
+    <i class="fa-solid fa-plus"></i>
+  </a>
+  <table class="table table-striped">
+    <thead class="mt-3" style="background: rgba(36,162,162,0.7)">
+    <tr>
+      <th>Từ ngày</th>
+      <th>Đến ngày</th>
+      <th>Chuyên ngành ĐT/BD</th>
+      <th>Cơ sở đào tạo</th>
+      <th>Trạng thái</th>
+      <th colspan="2">---</th>
+    </tr>
+    </thead>
+
+    <tbody class="table-info table-hover">
+    <tr *ngFor="let item of listQuaTrinhDaoTaoBoiDuong
+    | paginate: { id: 'pagi-0', itemsPerPage: 5, currentPage: p, totalItems: listQuaTrinhDaoTaoBoiDuong.length }">
+      <td>{{item.tuNgay | date:'dd/MM/Y'}}</td>
+      <td>{{item.denNgay | date:'dd/MM/Y'}}</td>
+      <td>{{item.tenChuyenNganhDaoTaoBoiDuong}}</td>
+      <td>{{item.coSoDaoTaoBoiDuong}}</td>
+      <td>{{item.trangThaiDaoTaoBoiDuong}}</td>
+      <td>
+        <div class="float-right btn-group btn-group-sm">
+          <a class="btn btn-sm btn-warning tooltips" data-placement="top" data-toggle="tooltip"
+             data-original-title="Edit" (click)="onOpenEditOrDeleteModal(item, 'edit')">
+            <i class="fa-solid fa-pen-to-square me-1"></i>
+          </a>
+          <a class="btn btn-sm btn-danger tooltips" data-placement="top" data-toggle="tooltip"
+             data-original-title="Delete" (click)="onOpenEditOrDeleteModal(item, 'delete')">
+            <i class="fa-solid fa-eraser me-1"></i>
+          </a>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <nav class="mt-5 text-center w-100">
+    <pagination-controls (pageChange)="p = $event" id="pagi-0"
+                         previousLabel=""
+                         nextLabel="">
+    </pagination-controls>
+  </nav>
+</div>
+
+<!-- Modal Add-->
+<!--<div class="modal fade" id="addModal" tabindex="-1" role="dialog"-->
+<!--     aria-labelledby="addModalLabel"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h5 class="modal-title" id="addModalLabel">Thêm mới</h5>-->
+<!--        <button type="button" class="close" data-bs-dismiss="modal"-->
+<!--                aria-label="Close"-->
+<!--                style="border: 0; border-radius: 25%;">-->
+<!--          <span aria-hidden="true">&times;</span>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <form #addForm="ngForm" (ngSubmit)="onAdd(addForm)">-->
+<!--          <div class="mb-3">-->
+<!--            <label for="Input0Add" class="form-label">Mã chức danh </label>-->
+<!--            <input type="text" [(ngModel)]="maChucDanh"-->
+<!--                   name="maChucDanh" class="form-control" id="Input0Add" readonly>-->
+<!--          </div>-->
+<!--          <div class="mb-3">-->
+<!--            <label for="Input1Add" class="form-label">Tên chức danh </label>-->
+<!--            <input type="text" ngModel name="tenChucDanh" class="form-control" id="Input1Add" required>-->
+<!--          </div>-->
+<!--          <div class="mb-3">-->
+<!--            <label for="Input2Add" class="form-label">Nhóm chức danh</label>-->
+<!--            <select [(ngModel)]="nhomChucDanhSelected" name="nhomChucDanh" class="form-select" id="Input2Add" required>-->
+<!--              <option value="">Không xác định</option>-->
+<!--              <option>Chính phủ</option>-->
+<!--              <option>Bộ, cơ quan ngang bộ</option>-->
+<!--            </select>-->
+<!--          </div>-->
+<!--          <div class="mb-3">-->
+<!--            <label for="Input3Add" class="form-label">Ghi chú</label>-->
+<!--            <input type="text" ngModel name="ghiChu" class="form-control" id="Input3Add">-->
+<!--          </div>-->
+<!--          <div class="modal-footer">-->
+<!--            <button type="button" id="add-obj-form"-->
+<!--                    class="btn btn-secondary"-->
+<!--                    data-bs-dismiss="modal">-->
+<!--              Đóng-->
+<!--            </button>-->
+<!--            <button [disabled]="addForm.invalid" type="submit" class="btn btn-success">Lưu</button>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </div>-->
+
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+<!-- Modal Update-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Chi tiết quá trình</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                style="border: 0; border-radius: 25%;"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm">
+          <div class="mb-2">
+            <input type="hidden" ngModel="{{editQuaTrinhDaoTaoBoiDuong.id}}"
+                   name="id" id="idEdit">
+          </div>
+          <div class="mb-2">
+            <label for="Input1Edit" class="form-label">Trạng thái đào tạo/ bồi dưỡng:</label>
+            <select ngModel="{{editQuaTrinhDaoTaoBoiDuong.trangThaiDaoTaoBoiDuong}}"
+                    name="trangThaiDaoTaoBoiDuong" class="form-select" id="Input1Edit">
+              <option>Đã hoàn thành</option>
+              <option>Đang đào tạo/ bồi dưỡng</option>
+              <option>Bảo lưu</option>
+              <option>Huỷ bỏ</option>
+              <option>Chờ quyết định</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="Input4122" class="form-label">Từ ngày:</label>
+            <input type="date" id="Input4122"
+                   class="form-control" required
+                   ngModel="{{editQuaTrinhDaoTaoBoiDuong.tuNgay}}"
+                   name="tuNgay">
+          </div>
+          <div class="mb-3">
+            <label for="Input41322" class="form-label">Đến ngày:</label>
+            <input type="date" id="Input41322"
+                   class="form-control" required
+                   ngModel="{{editQuaTrinhDaoTaoBoiDuong.denNgay}}"
+                   name="denNgay" >
+          </div>
+          <div class="mb-2">
+            <label for="Input2Edit" class="form-label">Tên chuyên ngành:</label>
+            <input [(ngModel)]="editQuaTrinhDaoTaoBoiDuong.tenChuyenNganhDaoTaoBoiDuong"
+                    name="tenChuyenNganhDaoTaoBoiDuong" class="form-control" id="Input2Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input3Edit" class="form-label">Trình độ đào tạo/ bồi dưỡng</label>
+            <input type="text"
+                   ngModel="{{editQuaTrinhDaoTaoBoiDuong.trinhDoDaoTaoBoiDuong}}"
+                   name="trinhDoDaoTaoBoiDuong"
+                   class="form-control" id="Input3Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input33Edit" class="form-label">Cơ sở đào tạo/ bồi dưỡng</label>
+            <input type="text"
+                   ngModel="{{editQuaTrinhDaoTaoBoiDuong.coSoDaoTaoBoiDuong}}"
+                   name="coSoDaoTaoBoiDuong"
+                   class="form-control" id="Input33Edit">
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="edit-obj-btn-close"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button (click)="onUpdate(editForm.value)" type="submit"
+                    class="btn btn-warning">
+              Lưu
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Delete-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Xoá thông tin</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" style="border: 0; border-radius: 25%;"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn muốn xoá: {{deleteQuaTrinhDaoTaoBoiDuong.hoSo.idHoSo}} {{deleteQuaTrinhDaoTaoBoiDuong.tenChuyenNganhDaoTaoBoiDuong}} không?
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete-form-btn-no" class="btn btn-info" data-bs-dismiss="modal">Không</button>
+        <button type="button" (click)="onDelete(keyId)" class="btn btn-danger">Có</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="liveAlertPlaceholder" class="w-25" style="position: fixed; right: 30px; bottom: 16px;"></div>

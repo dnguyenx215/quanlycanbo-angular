@@ -1,0 +1,57 @@
+<section class="container" id="dash-section">
+  <h5 class="mb-5 text-center">PHẦN MỀM QUẢN LÝ CÁN BỘ CÔNG, CHỨC VIÊN CHỨC</h5>
+  <div class="row ms-3">
+    <div class="card col-md-6 mb-4 mx-3" style="width: 15rem; background-color: #cac5f6">
+      <a (click)="navigate('/manage')" class="btn btn-link text-decoration-none ">
+        <div class="card-body">
+          <h3 class="card-title">{{hoSoCount}}</h3>
+          <p class="card-text fw-semibold">
+            HỒ SƠ CÁN BỘ
+          </p>
+        </div>
+      </a>
+    </div>
+    <div class="card col-md-6 mb-4 mx-3" style="width: 15rem; background-color: #cdff99">
+      <a (click)="navigate('/donvi')" class="btn btn-link text-decoration-none ">
+        <div class="card-body">
+          <h3 class="card-title">{{donViCount}}</h3>
+          <p class="card-text fw-semibold">
+            ĐƠN VỊ
+          </p>
+        </div>
+      </a>
+    </div>
+    <div class="card col-md-6 mb-4 mx-3" style="width: 15rem; background-color: #cdff99">
+      <a (click)="navigate('/chucvu')" class="btn btn-link text-decoration-none ">
+        <div class="card-body">
+          <h3 class="card-title">{{chucVuCount}}</h3>
+          <p class="card-text fw-semibold">
+            CHỨC VỤ
+          </p>
+        </div>
+      </a>
+    </div>
+    <div class="card col-md-6 mb-4 mx-3" style="width: 15rem; background-color: #ffba5785">
+      <a (click)="navigate('/ngach')" class="btn btn-link text-decoration-none ">
+        <div class="card-body">
+          <h3 class="card-title">{{ngachCount}}</h3>
+          <p class="card-text fw-semibold">
+            NGẠCH LƯƠNG
+          </p>
+        </div>
+      </a>
+    </div>
+<!--    <div class="card col-md-3 mb-4 mx-3" style="width: 15rem; background-color: #ffba5785">-->
+<!--      <a (click)="navigate('/manage-account')" class="btn btn-link text-decoration-none ">-->
+<!--        <div class="card-body">-->
+<!--          <h3 class="card-title">{{taiKhoanCount}}</h3>-->
+<!--          <p class="card-text fw-semibold">-->
+<!--            TÀI KHOẢN-->
+<!--          </p>-->
+<!--        </div>-->
+<!--      </a>-->
+<!--    </div>-->
+  </div>
+
+
+</section>

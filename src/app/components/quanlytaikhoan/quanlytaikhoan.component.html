@@ -1,0 +1,245 @@
+<h5 class="w-100 text-center mt-2 mb-3">QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG</h5>
+<div class="container mt-2" id="main-container">
+  <a class="btn btn-sm btn-outline-success mb-3 text-decoration-none"
+     id="add-btn-open-modal"
+     (click)="onOpenModalAdd( 'add')">
+    <i class="fa-solid fa-plus"></i>
+  </a>
+  <a class="btn btn-sm btn-outline-secondary mb-3 ms-3 text-decoration-none" href="/manage-account">
+    <i class="fa-solid fa-retweet"></i>
+  </a>
+  <form class="w-25 d-flex position-absolute" style="right: 10%; top: 23%; ">
+    <input type="search" class="form-control me-2" [(ngModel)]="ten" name="ten" placeholder="Tìm kiếm...">
+    <button class="btn btn-sm btn-outline-success ms-2" (click)="searchName()">
+      <i class="fa-solid fa-magnifying-glass px-1"></i>
+    </button>
+  </form>
+  <table class="table table-striped">
+    <thead class="mt-3" style="background: rgba(36,162,162,0.7)">
+    <tr>
+      <th>ID</th>
+      <th>Tên đăng nhập</th>
+      <th>Email</th>
+      <th>CMND/CCCD</th>
+      <th>Quyền</th>
+      <th>Trạng thái</th>
+      <th colspan="2">---</th>
+    </tr>
+    </thead>
+
+    <tbody class="table-info">
+    <tr *ngFor="let item of listTaikhoan">
+      <td>{{item.id}}</td>
+      <td>{{item.tenDangNhap}}</td>
+      <td>{{item.email}}</td>
+      <td>{{item.soCmnd}}</td>
+      <td>{{displayQuyen(item.quyen)}}</td>
+      <td>{{displayTrangThai(item.kichHoat)}}</td>
+      <td>
+        <span *ngIf="!checkAlreadyUseAccount(item)" class="float-right btn-group btn-group-sm">
+          <a class="btn btn-sm btn-warning tooltips" data-placement="top" data-toggle="tooltip"
+             data-original-title="Edit" (click)="onOpenEditOrDeleteModal(item, 'edit')">
+            <i class="fa-solid fa-pen-to-square me-1"></i>
+          </a>
+             <a class="btn btn-sm btn-danger tooltips" data-placement="top" data-toggle="tooltip"
+                data-original-title="Delete" (click)="onOpenEditOrDeleteModal(item, 'delete')">
+            <i class="fa-solid fa-eraser me-1"></i>
+          </a>
+        </span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- Modal Add-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+     aria-labelledby="addModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Thêm tài khoản mới</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close"
+                style="border: 0; border-radius: 25%;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm" (ngSubmit)="onAdd(addForm)">
+          <div class="mb-3">
+            <label for="Input0Add" class="form-label">Tên đăng nhập</label>
+            <input type="text" ngModel name="tenDangNhap" class="form-control" id="Input0Add" required>
+          </div>
+          <div class="mb-3">
+            <label for="Input1Add" class="form-label">Họ và tên</label>
+            <input type="text" ngModel name="hoVaTen" class="form-control" id="Input1Add" required>
+          </div>
+          <div class="mb-3">
+            <label for="Input2Add" class="form-label">Số CMND/CCCD</label>
+            <input type="text" ngModel name="soCmnd" class="form-control" id="Input2Add" required>
+          </div>
+          <div class="mb-3">
+            <label for="Input3Add" class="form-label">Email</label>
+            <input type="text" ngModel name="email" class="form-control" id="Input3Add" required>
+          </div>
+          <div class="mb-3">
+            <label for="Input4Add" class="form-label">Số điện thoại</label>
+            <input type="text" ngModel name="dienThoaiDiDong" class="form-control" id="Input4Add" required>
+          </div>
+          <div class="mb-3">
+            <label for="Input5Add" class="form-label">Mật khẩu</label>
+            <input type="password" ngModel name="matKhau" class="form-control" id="Input5Add" required>
+          </div>
+          <div class="mb-3">
+            <label for="Input7Add" class="form-label">Phân quyền</label>
+            <select class="form-select" id="Input7Add" [ngModel]="0" name="quyen" required>
+              <option value="1">Quản trị viên</option>
+              <option value="2">Cán bộ tổ chức</option>
+              <option value="0" [selected]="true">Người dùng</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="Input6Add" class="form-label">Trạng thái</label>
+            <select class="form-select" id="Input6Add" [ngModel]="1" name="kichHoat" required>
+              <option value="1" [selected]="true" >Bình thường</option>
+              <option value="0">Vô hiệu hoá</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="add-obj-form"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button [disabled]="addForm.invalid" type="submit" class="btn btn-success">Lưu</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Update-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Cập nhật</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                style="border: 0; border-radius: 25%;"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm">
+          <div class="mb-2">
+            <label for="Input0Edit" class="form-label">ID:</label>
+            <input type="hidden" ngModel="{{editTaikhoan.id}}" name="id" id="idEdit">
+            <input type="text" ngModel="{{editTaikhoan.id}}" disabled
+                   name="see-id" class="form-control" id="Input0Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input1Edit" class="form-label">Tên đăng nhập</label>
+            <input type="text" ngModel="{{editTaikhoan.tenDangNhap}}" readonly
+                   name="tenDangNhap" class="form-control" id="Input1Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input6Edit" class="form-label">Phân quyền</label>
+            <select class="form-select" id="Input6Edit"
+                    [(ngModel)]="editTaikhoan.quyen"  name="quyen">
+                <option value="1">Quản trị viên</option>
+                <option value="2">Cán bộ tổ chức</option>
+                <option value="0">Người dùng</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label for="Input7Edit" class="form-label">Trạng thái</label>
+            <select class="form-select" id="Input7Edit"
+                    [(ngModel)]="editTaikhoan.kichHoat"  name="kichHoat">
+              <option value="1">Bình thường</option>
+              <option value="0">Vô hiệu hoá</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label for="Input25Edit" class="form-label">Mật khẩu</label>
+            <input type="password" ngModel="{{editTaikhoan.matKhau}}"
+                   name="hoVaTen" class="form-control" id="Input25Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input2Edit" class="form-label">Họ và tên</label>
+            <input type="text" ngModel="{{editTaikhoan.hoVaTen}}" readonly
+                   name="hoVaTen" class="form-control" id="Input2Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input8Edit" class="form-label">Email</label>
+            <input type="text" readonly
+                   ngModel="{{editTaikhoan.email}}"
+                   name="email"
+                   class="form-control" id="Input8Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input4Edit" class="form-label">Số điện thoại</label>
+            <input type="text" readonly
+                   ngModel="{{editTaikhoan.dienThoaiDiDong}}"
+                   name="dienThoaiDiDong"
+                   class="form-control" id="Input4Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input5Edit" class="form-label">CMND/CCCD</label>
+            <input type="text" readonly
+                   ngModel="{{editTaikhoan.soCmnd}}"
+                   name="soCmnd"
+                   class="form-control" id="Input5Edit">
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="edit-obj-btn-close"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button (click)="onUpdate(editForm.value)" type="submit"
+                    class="btn btn-warning">
+              Lưu
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Delete-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Xoá thông tin</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" style="border: 0; border-radius: 25%;"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn có muốn xoá {{deleteTaikhoan?.tenDangNhap}} không?
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete-form-btn-no" class="btn btn-info" data-bs-dismiss="modal">Không</button>
+        <button type="button" (click)="onDelete(keyId)" class="btn btn-danger">Có</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="liveAlertPlaceholder" class="w-25" style="position: fixed; right: 30px; bottom: 16px;"></div>

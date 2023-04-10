@@ -1,0 +1,25 @@
+#menu-drop-acc {
+  position: absolute;
+  left: -9vw;
+  top: 125%;
+}
+
+footer {
+  padding-top: 50px;
+}
+
+#header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+#main-container {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  width: 100%;
+  min-height: 100vh!important;
+  background-color: rgba(160, 250, 255, 0.5);
+}

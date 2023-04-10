@@ -1,0 +1,52 @@
+<section class="container">
+  <h5 class="text-center my-2">THÔNG TIN TÀI KHOẢN</h5>
+  <form #tkForm="ngForm">
+    <table class="table w-50 account-table">
+      <tbody>
+      <tr>
+        <td>
+          <label class="form-label">Tên đăng nhập:</label>
+          <input type="text" class="form-control" ngModel="{{tkInfo.tenDangNhap}}" name="tenDangNhap" readonly>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label class="form-label">Họ và tên:</label>
+          <input type="text" class="form-control" ngModel="{{tkInfo.hoVaTen}}" name="hoVaTen">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label class="form-label">CMND/CCCD:</label>
+          <input type="text" class="form-control" ngModel="{{tkInfo.soCmnd}}" name="soCmnd">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label class="form-label">Email:</label>
+          <input type="text" class="form-control" ngModel="{{tkInfo.email}}" name="email">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label class="form-label">Số điện thoại:</label>
+          <input type="text" class="form-control" ngModel="{{tkInfo.dienThoaiDiDong}}" name="dienThoaiDiDong">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button type="submit" class="btn btn-outline-primary mt-3 ms-5" (click)="onUpdate(tkForm.value)">
+            Cập nhật
+          </button>
+          <a (click)="navigate('/change-passwd')" class="btn btn-outline-secondary mt-3 ms-3">
+            Đổi mật khẩu
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </form>
+
+
+  <div id="liveAlertPlaceholder" class="w-25" style="position: fixed; right: 5%; bottom: 5%;"></div>
+</section>
