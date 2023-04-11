@@ -29,6 +29,15 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterOutlet} from "@angular/router";
 import {AuthGuard} from "./services/auth.guard";
 import { NgxPaginationModule } from 'ngx-pagination';
+// Import FusionCharts library and chart modules
+import * as FusionCharts from "fusioncharts";
+import * as charts from "fusioncharts/fusioncharts.charts";
+import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
+import {FusionChartsModule} from "angular-fusioncharts";
+
+// Pass the fusioncharts library and chart modules
+FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,6 +69,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ReactiveFormsModule,
     HttpClientModule,
     NgxPaginationModule,
+    FusionChartsModule,
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]

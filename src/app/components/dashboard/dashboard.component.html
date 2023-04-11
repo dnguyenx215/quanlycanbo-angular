@@ -41,27 +41,34 @@
         </div>
       </a>
     </div>
-<!--    <div class="card col-md-3 mb-4 mx-3" style="width: 15rem; background-color: #ffba5785">-->
-<!--      <a (click)="navigate('/manage-account')" class="btn btn-link text-decoration-none ">-->
-<!--        <div class="card-body">-->
-<!--          <h3 class="card-title">{{taiKhoanCount}}</h3>-->
-<!--          <p class="card-text fw-semibold">-->
-<!--            TÀI KHOẢN-->
-<!--          </p>-->
-<!--        </div>-->
-<!--      </a>-->
-<!--    </div>-->
-  </div>
+    <!--    <div class="card col-md-3 mb-4 mx-3" style="width: 15rem; background-color: #ffba5785">-->
+    <!--      <a (click)="navigate('/manage-account')" class="btn btn-link text-decoration-none ">-->
+    <!--        <div class="card-body">-->
+    <!--          <h3 class="card-title">{{taiKhoanCount}}</h3>-->
+    <!--          <p class="card-text fw-semibold">-->
+    <!--            TÀI KHOẢN-->
+    <!--          </p>-->
+    <!--        </div>-->
+    <!--      </a>-->
+    <!--    </div>-->
 
-  <div>
-    <canvas baseChart class="chart"
-            [data]="barChartData"
-            [options]="barChartOptions"
-            [plugins]="barChartPlugins"
-            [type]="barChartType"
-            (chartHover)="chartHovered($event)"
-            (chartClick)="chartClicked($event)">
-    </canvas>
+    <div class="d-flex align-content-around justify-content-around align-items-stretch">
+      <fusioncharts
+        class="mt-5 bg-opacity-50"
+        width="450"
+        height="350"
+        type="pie3d"
+        [dataSource]="dataSource">
+      </fusioncharts>
+
+      <fusioncharts
+        class="mt-5 bg-opacity-50"
+        width="400"
+        height="350"
+        type="column2d"
+        [dataSource]="dataSource">
+      </fusioncharts>
+    </div>
   </div>
 
 </section>
