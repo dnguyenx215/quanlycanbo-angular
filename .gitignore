@@ -42,6 +42,6 @@ testem.log
 Thumbs.db
 
 #bootstrap & fontawesome
-/src/assets/bootstrap523
-/src/assets/bootstrapicons
-/src/assets/fontawesomefree630web
+/src/assets/bootstrap523/
+/src/assets/bootstrapicons/
+/src/assets/fontawesomefree630web/
