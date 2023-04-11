@@ -29,7 +29,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterOutlet} from "@angular/router";
 import {AuthGuard} from "./services/auth.guard";
 import { NgxPaginationModule } from 'ngx-pagination';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,7 +59,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgxPaginationModule
+    NgxPaginationModule,
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]

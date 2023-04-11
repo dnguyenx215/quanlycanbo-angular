@@ -13,6 +13,8 @@ import {HoSo} from "../../models/hoso";
 import {Taikhoan} from "../../models/taikhoan";
 import {TaikhoanService} from "../../services/taikhoan.service";
 
+// @ts-ignore
+// @ts-ignore
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -147,5 +149,8 @@ export class DashboardComponent {
       }
     )
   }
+
+
+
 
 }
