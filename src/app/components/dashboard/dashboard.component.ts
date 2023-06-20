@@ -12,6 +12,7 @@ import {NgachBacLuong} from "../../models/ngachbacluong";
 import {HoSo} from "../../models/hoso";
 import {Taikhoan} from "../../models/taikhoan";
 import {TaikhoanService} from "../../services/taikhoan.service";
+import {formatDate} from "@angular/common";
 
 // @ts-ignore
 // @ts-ignore
@@ -30,6 +31,7 @@ export class DashboardComponent {
   dataTrinhDoChuyenMon: any[] = [];
   listTaiKhoan: Taikhoan[] = [];
   dataSource: any;
+  private dataAge: any;
 
   constructor(private theService: HoSoService, private router: Router, private tkService: TaikhoanService,
               private DVService: DonViService, private chucVuService: ChucVuService,
@@ -44,7 +46,6 @@ export class DashboardComponent {
     this.getListChucVu();
     this.getListNgach();
     this.getListTaiKhoan();
-    this.getDataTrinhDoChuyenMon();
   }
 
   hoSoCount: number = 0;
@@ -52,6 +53,7 @@ export class DashboardComponent {
   chucVuCount: number = 0;
   ngachCount: number = 0;
   taiKhoanCount: number = 0;
+  dataSourceAge: any;
 
   navigate(url: string) {
     this.router.navigate([url]).then(r => console.log(r));
@@ -68,9 +70,11 @@ export class DashboardComponent {
           // data trinh do chuyen mon
           this.setDataDSTrinhDoChuyenMon(res);
           this.chartTDChuyenMonOption();
+          this.getAgeData(res);
+          this.chartAgeOption();
 
 
-          },
+        },
         error: (err) => {
           console.log(err);
         }
@@ -87,7 +91,6 @@ export class DashboardComponent {
     let tdTienSi = 0;
 
     for (let hoSo of dshs) {
-      console.log('hoso ngaysinh: ' + hoSo.ngaySinh)
       if (hoSo.trinhDoChuyenMon == 'Sơ cấp') {
         tdSoCap++;
       }
@@ -104,7 +107,7 @@ export class DashboardComponent {
         tdCaoHoc++;
       }
       if (hoSo.trinhDoChuyenMon == 'Tiến sĩ') {
-        tdTienSi+= 1;
+        tdTienSi += 1;
         console.log(tdTienSi)
       }
     }
@@ -220,9 +223,6 @@ export class DashboardComponent {
     )
   }
 
-  getDataTrinhDoChuyenMon() {
-
-  }
 
   chartTDChuyenMonOption() {
 
@@ -247,5 +247,80 @@ export class DashboardComponent {
     };
   }
 
+
+  chartAgeOption() {
+    // Chart Configuration
+    this.dataSourceAge = {
+      chart: {
+        //Set the chart caption
+        caption: "Thống kê theo độ tuổi",
+        //Set the chart subcaption
+        // subCaption: "In MMbbl = One Million barrels",
+        //Set the x-axis name
+        xAxisName: "Độ tuổi",
+        //Set the y-axis name
+        yAxisName: "Số lượng",
+        // numberSuffix: "K",
+        //Set the theme for your chart
+        theme: "fusion",
+        decimals: "0",
+      },
+      // Chart Data
+      data: this.dataAge
+    };
+  }
+
+  private getAgeData(dshs: HoSo[]) {
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let age: any;
+    let duoi30 = 0;
+    let tu31den40 = 0;
+    let tu41den50 = 0;
+    let tu51den60 = 0;
+    let tren60 = 0;
+    console.log('current year: ' + currentYear);
+    for (let hoSo of dshs) {
+      age = parseInt(currentYear.toString()) - parseInt(formatDate(hoSo.ngaySinh, 'YYYY', 'en-US').toString());
+      if(age <= 30) {
+        duoi30++;
+      }
+      else if(age > 30 && age <= 40) {
+        tu31den40++;
+      }
+      else if(age > 40 && age <= 50) {
+        tu41den50++;
+      }
+      else if(age > 50 && age <= 60) {
+        tu51den60++;
+      }
+      else if(age > 60) {
+        tren60++;
+      }
+    }
+
+    this.dataAge = [
+      {
+        label: 'Dưới 30',
+        value: duoi30
+      },
+      {
+        label: 'Từ 31 đến 40',
+        value: tu31den40
+      },
+      {
+        label: 'Từ 41 đến 50',
+        value: tu41den50
+      },
+      {
+        label: 'Từ 51 đến 60',
+        value: tu51den60
+      },
+      {
+        label: 'Trên 60',
+        value: tren60
+      },
+    ];
+  }
 
 }

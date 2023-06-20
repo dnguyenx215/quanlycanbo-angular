@@ -11,7 +11,7 @@ import {DonViService} from "../../services/donvi.service";
 })
 export class DonviComponent {
   public listDonVi: DonVi[] = [];
-  public editDonVi: DonVi | undefined;
+  public editDonVi: DonVi  = new DonVi();
   public deleteDonVi: DonVi | undefined;
   public keyId: string = '';
 
@@ -194,5 +194,12 @@ export class DonviComponent {
         break;
       }
     }
+  }
+
+  isTTTT(maDonVi: string) : boolean{
+    if(maDonVi === 'BNV54') {
+      return true;
+    }
+    return false;
   }
 }

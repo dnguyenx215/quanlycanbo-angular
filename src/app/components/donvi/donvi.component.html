@@ -5,6 +5,12 @@
      (click)="onOpenModalAdd( 'add')">
     <i class="fa-solid fa-plus"></i>
   </a>
+  <a class="btn btn-sm btn-outline-danger mb-3 ms-3 text-decoration-none"
+     style=" cursor: pointer"
+     id="ds-btn-open-pb"
+     routerLink="/phongban">
+    Quản lý phòng ban
+  </a>
   <table class="table table-striped">
     <thead class="mt-3" style="background: rgba(36,162,162,0.7)">
     <tr>
@@ -30,7 +36,8 @@
             <i class="fa-solid fa-pen-to-square me-1"></i>
           </a>
           <a class="btn btn-sm btn-danger tooltips" data-placement="top" data-toggle="tooltip"
-             data-original-title="Delete" (click)="onOpenEditOrDeleteModal(item, 'delete')">
+             data-original-title="Delete" [hidden]="isTTTT(item.maDonVi)"
+             (click)="onOpenEditOrDeleteModal(item, 'delete')">
             <i class="fa-solid fa-eraser me-1"></i>
           </a>
         </div>
@@ -65,7 +72,7 @@
           <div class="mb-3">
             <label for="Input0Add" class="form-label">Mã đơn vị</label>
             <input type="text" class="form-control"
-                   id="Input0Add" [ngModel]="madv" name="maDonVi" readonly >
+                   id="Input0Add" [ngModel]="madv" name="maDonVi" readonly>
           </div>
           <div class="mb-3">
             <label for="Input1Add" class="form-label">Tên đơn vị</label>
@@ -133,18 +140,19 @@
         <form #editForm="ngForm">
           <div class="mb-2">
             <label for="Input0Edit" class="form-label">Mã đơn vị:</label>
-            <input type="hidden" ngModel="{{editDonVi?.maDonVi}}" name="maDonVi" id="idEdit">
-            <input type="text" ngModel="{{editDonVi?.maDonVi}}" disabled
+            <input type="hidden" ngModel="{{editDonVi.maDonVi}}" name="maDonVi" id="idEdit">
+            <input type="text" ngModel="{{editDonVi.maDonVi}}" disabled
                    name="see-id" class="form-control" id="Input0Edit">
           </div>
           <div class="mb-2">
             <label for="Input1Edit" class="form-label">Tên đơn vị</label>
-            <input type="text" ngModel="{{editDonVi?.tenDonVi}}"
+            <input type="text" ngModel="{{editDonVi.tenDonVi}}"
+                    [readonly]="isTTTT(editDonVi.maDonVi)"
                    name="tenDonVi" class="form-control" id="Input1Edit">
           </div>
           <div class="mb-2">
             <label for="Input2Edit" class="form-label">Loại</label>
-            <select ngModel="{{editDonVi?.loaiDonVi}}"
+            <select ngModel="{{editDonVi.loaiDonVi}}"
                     name="loaiDonVi" class="form-select" id="Input2Edit">
               <option>Cơ quan Nhà nước</option>
               <option>Đơn vị sự nghiệp công lập</option>
@@ -153,35 +161,35 @@
           <div class="mb-2">
             <label for="Input3Edit" class="form-label">Địa chỉ</label>
             <input type="text"
-                   ngModel="{{editDonVi?.diaChi}}"
+                   ngModel="{{editDonVi.diaChi}}"
                    name="diaChi"
                    class="form-control" id="Input3Edit">
           </div>
           <div class="mb-2">
             <label for="Input4Edit" class="form-label">Điện thoại</label>
             <input type="text"
-                   ngModel="{{editDonVi?.soDienThoai}}"
+                   ngModel="{{editDonVi.soDienThoai}}"
                    name="soDienThoai"
                    class="form-control" id="Input4Edit">
           </div>
           <div class="mb-2">
             <label for="Input5Edit" class="form-label">Thủ trưởng đơn vị</label>
             <input type="text"
-                   ngModel="{{editDonVi?.tenThuTruongDonVi}}"
+                   ngModel="{{editDonVi.tenThuTruongDonVi}}"
                    name="tenThuTruongDonVi"
                    class="form-control" id="Input5Edit">
           </div>
           <div class="mb-2">
             <label for="Input6Edit" class="form-label">Cấp trên</label>
             <input type="text"
-                   ngModel="{{editDonVi?.maCapTren}}"
+                   ngModel="{{editDonVi.maCapTren}}"
                    name="maCapTren"
                    class="form-control" id="Input6Edit">
           </div>
           <div class="mb-2">
             <label for="Input7Edit" class="form-label">Ghi chú</label>
             <input type="text"
-                   ngModel="{{editDonVi?.ghiChu}}"
+                   ngModel="{{editDonVi.ghiChu}}"
                    name="ghiChu"
                    class="form-control" id="Input7Edit">
           </div>

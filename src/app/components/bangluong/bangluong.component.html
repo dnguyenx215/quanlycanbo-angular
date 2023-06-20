@@ -1,4 +1,4 @@
-<h5 class="w-100 text-center mt-2 mb-3">DANH SÁCH LƯƠNG</h5>
+<h5 class="w-100 text-center mt-2 mb-3">DANH SÁCH QUẢN LÝ LƯƠNG</h5>
 <div class="container mt-2" id="main-container">
   <section class="d-inline-block">
     <a class="btn btn-sm me-3 btn-outline-secondary mb-3 text-decoration-none"
@@ -25,7 +25,7 @@
               style="width: 280px; height: 36px;"
               (change)="loadHoSoByPhongBan(phongBanSelected)"
               [compareWith]="customCompareDV">
-        <option selected disabled>--- Phòng ban ---</option>
+        <option [value]="''" disabled>--- Phòng ban ---</option>
         <option *ngFor="let item of listPhongBan" [ngValue]="item">
           {{item.tenPhongBan}}
         </option>
@@ -41,12 +41,13 @@
       <th>Bậc lương</th>
       <th>Hệ số lương</th>
       <th>Mức lương (VNĐ)</th>
+      <th>Phụ cấp (VNĐ)</th>
       <th colspan="2">---</th>
     </tr>
     </thead>
 
     <tbody class="table-info">
-    <tr
+    <tr [hidden]="!(item.trangThaiHoSo === 'Đang làm việc')"
       *ngFor="let item of listHoSo | paginate: { id: 'pagination', itemsPerPage: 10, currentPage: p, totalItems: listHoSo.length }">
       <td>{{item.soHieuCBCCVC}}</td>
       <td>{{item.hoVaTen}}</td>
@@ -54,12 +55,32 @@
       <td>{{item.bacLuong}}</td>
       <td>{{item.heSoLuong}}</td>
       <td>{{getMucLuong(item.heSoLuong)}}</td>
+      <td>{{item.phuCapThamNienVuotKhung + item.heSoPhuCapChucVu | number}}</td>
       <td>
-        <div class="float-right btn-group btn-group-sm">
-          <a class="btn btn-sm btn-warning tooltips" data-placement="top" data-toggle="tooltip"
-             data-original-title="Edit" (click)="onOpenEditOrDeleteModal(item, 'edit')">
+        <div class="float-right btn-group btn-group-sm ">
+          <a class="btn btn-sm btn-warning tooltips dropdown-toggle"
+             data-bs-toggle="dropdown" aria-expanded="false"
+             data-placement="top" data-toggle="tooltip"
+             data-original-title="Edit">
             <i class="fa-solid fa-pen-to-square"></i>
           </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item btn"
+                 data-original-title="updateheso"
+                 (click)="onOpenEditOrDeleteModal(item, 'edit')">
+                <i class="fa-solid fa-pen me-1"></i>
+                Cập nhật hệ số lương
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item btn" data-original-title="updatephucap"
+                 (click)="onOpenEditOrDeleteModal(item, 'phucap')">
+                <i class="fa-solid fa-pen me-1"></i>
+                Cập nhật phụ cấp
+              </a>
+            </li>
+          </ul>
         </div>
       </td>
     </tr>
@@ -76,13 +97,13 @@
 <div id="liveAlertPlaceholder" class="w-25" style="position: fixed; right: 30px; bottom: 16px;"></div>
 
 
-<!-- Modal Update-->
+<!-- Modal Update bac - heso -->
 <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
      aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="updateModalLabel">Cập nhật lương</h5>
+        <h5 class="modal-title" id="updateModalLabel">Cập nhật hệ số lương</h5>
         <button type="button" class="close" data-bs-dismiss="modal"
                 style="border: 0; border-radius: 25%;"
                 aria-label="Close">
@@ -105,7 +126,8 @@
           <div class="mb-2">
             <label for="Input3Edit" class="form-label">Bậc lương</label>
             <input type="number" [(ngModel)]="editHoSo.bacLuong"
-                   name="bacLuong" [min]="1" [max]="12" (change)="tinhHeSo(editHoSo.maNgach)"
+                   name="bacLuong" [min]="1" [max]="bacLuongMax"
+                   (change)="tinhHeSo(editHoSo.maNgach)"
                    class="form-control" id="Input3Edit">
           </div>
           <div class="mb-2">
@@ -122,6 +144,70 @@
               Đóng
             </button>
             <button (click)="onUpdate(editForm.value)" type="submit"
+                    class="btn btn-warning">
+              Lưu
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal Update phu cap -->
+<div class="modal fade" id="phucapModal" tabindex="-1" role="dialog" aria-labelledby="phucapModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="phucapModalLabel">Cập nhật phụ cấp</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                style="border: 0; border-radius: 25%;"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editpcForm="ngForm">
+          <div class="mb-2">
+            <label for="Input01Edit" class="form-label">Số hiệu CBCCVC:</label>
+            <input type="hidden" ngModel="{{editHoSo.idHoSo}}" name="idHoSo" id="idEdit1">
+            <input type="text" ngModel="{{editHoSo.soHieuCBCCVC}}" readonly
+                   name="soHieuCBCCVC" class="form-control" id="Input01Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input21vqEdit" class="form-label">Vị trí/ Chức vụ:</label>
+            <input type="text" ngModel="{{editHoSo.chucVu}}" hidden
+                   name="chucVu" class="form-control" id="Input21qEdit">
+            <input type="text" [ngModel]="tenChucVu" readonly
+                   name="tenChucVu" class="form-control" id="Input21vqEdit">
+          </div>
+          <div class="mb-2">
+            <label for="Input21Edit" class="form-label">Mã ngạch</label>
+            <input type="text" ngModel="{{editHoSo.maNgach}}" readonly
+                   name="maNgach" class="form-control" id="Input21Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input31Edit" class="form-label">Phụ cấp vượt khung</label>
+            <input type="number" [(ngModel)]="editHoSo.phuCapThamNienVuotKhung"
+                   name="phuCapThamNienVuotKhung" [defaultValue]="0" [min]="0"
+                   class="form-control" id="Input31Edit">
+          </div>
+          <div class="mb-2">
+            <label for="Input4Edit" class="form-label">Phụ cấp chức vụ</label>
+            <input type="number" [defaultValue]="0" [min]="0"
+                   ngModel="{{editHoSo.heSoPhuCapChucVu}}"
+                   name="heSoPhuCapChucVu"
+                   class="form-control" id="Input41Edit">
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="edit-pc-obj-btn-close"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button (click)="onUpdatePhuCap(editpcForm.value)" type="submit"
                     class="btn btn-warning">
               Lưu
             </button>

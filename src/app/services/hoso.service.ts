@@ -46,6 +46,11 @@ export class HoSoService {
   public updateHoSoMucLuong(b: number, h: number, m: number): Observable<number> {
     return this.http.put<number>(`${this.apiServerUrl}/hoso/updateheso?bac=${b}&heso=${h}&macb=${m}`, null);
   }
+
+  public updateHoSoPhuCap(vk: number, cv: number, m: number): Observable<number> {
+    return this.http.put<number>(`${this.apiServerUrl}/hoso/update-phucap?phuCapVuotKhung=${vk}&phuCapChucVu=${cv}&macb=${m}`, null);
+  }
+
   public updateHoSoDanhGia(d: string, dg: string, m: number): Observable<HoSo> {
     return this.http.put<HoSo>(`${this.apiServerUrl}/hoso/danhgia?ngaydg=${d}&id=${m}`, dg);
   }
@@ -54,7 +59,9 @@ export class HoSoService {
     return this.http.put<HoSo>(`${this.apiServerUrl}/hoso/daotaoboiduong?id=${id}&ngayguidtbd=${ngayGuiDTBD}&tencn=${tenCNDTBD}`, trangThaiDTBD);
   }
 
-
+  public updateHoSoNghiHuu(id: number, ngayNH: string, hinhThuc: string): Observable<HoSo> {
+    return this.http.put<HoSo>(`${this.apiServerUrl}/hoso/nghihuu?id=${id}&ngayqd=${ngayNH}`, hinhThuc);
+  }
   public updateHoSoKhenThuong(s: string, d: string, dg: string, m: number): Observable<HoSo> {
     return this.http.put<HoSo>(`${this.apiServerUrl}/hoso/khenthuong?soqd=${s}&ngayqd=${d}&id=${m}`, dg);
   }

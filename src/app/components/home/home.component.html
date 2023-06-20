@@ -15,25 +15,45 @@
        style="height: 34px; cursor: pointer"
        id="ds-btn-open-luong"
        routerLink="/ds-luong">
-      Danh sách lương
+      <i class="fa-solid fa-wallet me-1"></i>
+      Quản lý lương
     </a>
 
-    <input type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
-           style="height: 36px; cursor: pointer" value="Khen thưởng"
-           id="ds-btn-open-kt" [disabled]="isChecked()"
-           (click)="onOpenModalMulti('khenthuong')">
-    <input type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
-           style="height: 36px; cursor: pointer" value="Kỷ luật"
-           id="ds-btn-open-kl" [disabled]="isChecked()"
-           (click)="onOpenModalMulti('kyluat')">
-    <input type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
-           style="height: 36px; cursor: pointer" value="Đánh giá"
-           id="ds-btn-open-dg" [disabled]="isChecked()"
-           (click)="onOpenModalMulti('danhgia')">
-    <input type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
-           style="height: 36px; cursor: pointer" value="Đào tạo/ bồi dưỡng"
-           id="ds-btn-open-dtbd" [disabled]="isChecked()"
-           (click)="onOpenModalMulti('daotaoboiduong')">
+    <button type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
+
+            id="ds-btn-open-kt" [disabled]="isChecked()"
+            (click)="onOpenModalMulti('khenthuong')">
+      <i class="fa-regular fa-clock me-1"></i>
+      Khen thưởng
+    </button>
+    <button type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
+
+            id="ds-btn-open-kl" [disabled]="isChecked()"
+            (click)="onOpenModalMulti('kyluat')">
+      <i class="fa-regular fa-clock me-1"></i>
+      Kỷ luật
+    </button>
+    <button type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
+
+            id="ds-btn-open-dg" [disabled]="isChecked()"
+            (click)="onOpenModalMulti('danhgia')">
+      <i class="fa-regular fa-clock me-1"></i>
+      Đánh giá
+    </button>
+    <button class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
+
+            id="ds-btn-open-dtbd" [disabled]="isChecked()"
+            (click)="onOpenModalMulti('daotaoboiduong')">
+      <i class="fa-regular fa-clock me-1"></i>
+      Đào tạo/ Bồi dưỡng
+    </button>
+    <button type="button" class="btn btn-sm me-3 btn-outline-primary text-decoration-none"
+
+            id="ds-btn-open-nghihuu" [disabled]="isChecked()"
+            (click)="onOpenModalMulti('nghihuu')">
+      <i class="fa-regular fa-clock me-1"></i>
+      Nghỉ hưu
+    </button>
   </section>
   <div id="search-form" class="mb-3">
     <select [(ngModel)]="donViSelected" name="DonVi" id="select-donVi" class="form-select"
@@ -51,7 +71,7 @@
             style="width: 280px; height: 36px;"
             (change)="loadHoSoByPhongBan(phongBanSelected)"
             [compareWith]="customCompareDV">
-      <option selected disabled [value]="">--- Phòng ban ---</option>
+      <option disabled [value]="''">--- Phòng ban ---</option>
       <option *ngFor="let item of listPhongBan" [ngValue]="item">
         {{item.tenPhongBan}}
       </option>
@@ -75,33 +95,42 @@
       <th>Giới tính</th>
       <th>Ngày sinh</th>
       <th>Phòng ban</th>
-      <th colspan="2">-- Hành động --</th>
+<!--      <th>Trạng thái</th>-->
+      <th colspan="2">---</th>
     </tr>
     </thead>
 
     <tbody class="table-info ">
-    <tr *ngFor="let item of listHoSo
+    <tr *ngFor="let hoSoItem of listHoSo
     | paginate: { id: 'pagination', itemsPerPage: 10,
     currentPage: p, totalItems: listHoSo.length }">
       <td>
         <input type="checkbox" class="form-check"
-               name="check-box-menu"
+               name="check-box-menu" [disabled]="!(hoSoItem.trangThaiHoSo === 'Đang làm việc')"
                (change)="getCheckBoxValue()"
-               id="{{item.idHoSo}}" [value]="item.idHoSo">
+               id="{{hoSoItem.idHoSo}}" [value]="hoSoItem.idHoSo">
       </td>
-      <td>{{item.soHieuCBCCVC}}</td>
-      <td>{{item.hoVaTen}}</td>
-      <td>{{item.gioiTinh}}</td>
-      <td>{{item.ngaySinh | date:'dd/MM/Y'}}</td>
-      <td>{{item.phongBan.tenPhongBan}}</td>
+      <td>{{hoSoItem.soHieuCBCCVC}}</td>
+      <td>{{hoSoItem.hoVaTen}}</td>
+      <td>{{hoSoItem.gioiTinh}}</td>
+      <td *ngIf="calcAge(hoSoItem.ngaySinh, hoSoItem.gioiTinh)"
+          style="color: #cc6109">
+        {{hoSoItem.ngaySinh | date:'dd/MM/Y'}}
+      </td>
+      <td *ngIf="!calcAge(hoSoItem.ngaySinh, hoSoItem.gioiTinh)">
+        {{hoSoItem.ngaySinh | date:'dd/MM/Y'}}
+      </td>
+      <td>{{hoSoItem.phongBan.tenPhongBan}}</td>
+<!--      <td>{{hoSoItem.trangThaiHoSo}}</td>-->
       <td>
         <div class="float-right btn-group btn-group-sm">
+          <!--          navigateCTHoSo('/chitiethoso', item.idHoSo)-->
           <a class="btn btn-sm btn-warning tooltips" data-placement="top" data-toggle="tooltip"
-             data-original-title="Edit" (click)="navigateCTHoSo('/chitiethoso', item.idHoSo)">
+             data-original-title="Edit" (click)="onOpenModal(hoSoItem, 'view-detail')">
             <i class="fa-solid fa-eye"></i>
           </a>
           <a class="btn btn-sm btn-danger tooltips" data-placement="top" data-toggle="tooltip"
-             data-original-title="Delete" (click)="onOpenModal(item, 'delete')">
+             data-original-title="Delete" (click)="onOpenModal(hoSoItem, 'delete')">
             <i class="fa-solid fa-eraser"></i>
           </a>
           <a class="btn btn-sm btn-primary dropdown-toggle tooltips"
@@ -112,27 +141,36 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item btn"
-                   data-original-title="KhenThuong" (click)="onOpenModal( item, 'khenthuong')">
+                   data-original-title="KhenThuong" (click)="onOpenModal( hoSoItem, 'khenthuong')">
               <i class="fa-regular fa-bookmark"></i>
               TT Khen thưởng
             </a></li>
-            <li><a class="dropdown-item btn" data-original-title="KyLuat"
-                   (click)="onOpenModal(item, 'kyluat')">
-              <i class="fa-regular fa-bookmark"></i>
-              TT Kỷ luật
-            </a></li>
             <li>
               <a class="dropdown-item btn" data-original-title="KyLuat"
-                 (click)="onOpenModal(item, 'danhgia')">
+                 (click)="onOpenModal(hoSoItem, 'kyluat')">
+                <i class="fa-regular fa-bookmark"></i>
+                TT Kỷ luật
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item btn" data-original-title="DanhGia"
+                 (click)="onOpenModal(hoSoItem, 'danhgia')">
                 <i class="bi bi-star-half"></i>
                 Đánh giá
               </a>
             </li>
             <li>
-              <a class="dropdown-item btn" data-original-title="KyLuat"
-                 (click)="navigateCTHoSo('/chi-tiet-qua-trinh-dao-tao-boi-duong', item.idHoSo)">
+              <a class="dropdown-item btn" data-original-title="DaoTao"
+                 (click)="navigateCTHoSo('/chi-tiet-qua-trinh-dao-tao-boi-duong', hoSoItem.idHoSo)">
                 <i class="fa-solid fa-graduation-cap"></i>
                 QT Đào tạo/ bồi dưỡng
+              </a>
+            </li>
+            <li *ngIf="hoSoItem.hinhThucNghiHuu != null">
+              <a class="dropdown-item btn" data-original-title="NghiHuu"
+                 (click)="onOpenModal(hoSoItem, 'nghihuu')">
+                <i class="fa-regular fa-bookmark"></i>
+                TT Nghỉ hưu
               </a>
             </li>
           </ul>
@@ -163,7 +201,7 @@
         </button>
       </div>
       <div class="modal-body">
-        Bạn có muốn xoá {{deleteHoSo?.hoVaTen}} không?
+        Bạn có muốn xoá {{deleteHoSo.hoVaTen}} không?
       </div>
       <div class="modal-footer">
         <button type="button" id="delete-form-btn-no" class="btn btn-info" data-bs-dismiss="modal">Không</button>
@@ -465,8 +503,8 @@
           <div class="mb-3">
             <label for="Input412" class="form-label">Xếp loại đánh giá</label>
             <select id="Input412" class="form-select"
-                    ngModel name="ndgdanhGia">
-              <option selected disabled>--- Xếp loại ---</option>
+                    [ngModel]="nDanhGia" name="ndgdanhGia">
+              <option disabled [value]="''">--- Xếp loại ---</option>
               <option>Hoàn thành xuất sắc nhiệm vụ</option>
               <option>Hoàn thành tốt nhiệm vụ</option>
               <option>Hoàn thành nhiệm vụ</option>
@@ -551,7 +589,7 @@
               Đóng
             </button>
             <button [disabled]="addDGForm.invalid" type="submit" class="btn btn-success">
-              Lưu
+              Cập nhật
             </button>
           </div>
         </form>
@@ -591,7 +629,7 @@
             <label for="Input41322" class="form-label">Đến ngày:</label>
             <input type="date" id="Input41322"
                    class="form-control" required
-                   formControlName="denNgay" >
+                   formControlName="denNgay">
           </div>
           <div class="mb-3">
             <label for="Input5123Add" class="form-label">Cơ sở đào tạo/ bồi dưỡng</label>
@@ -641,5 +679,221 @@
   </div>
 </div>
 
+<!-- Modal View Detail-->
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog"
+     aria-labelledby="viewModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewModalLabel">Tóm tắt thông tin cán bộ</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" style="border: 0; border-radius: 25%;"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <section class="d-flex align-content-around justify-content-around mt-3">
+          <img [src]="imageSrc" alt="image" width="125" height="125" class="ms-1 mt-5">
+          <p style="font-size: 16px;">
+            <label class="mb-2">
+              <b>Trạng thái hồ sơ: </b> {{viewHoSo.trangThaiHoSo}}
+            </label>
+            <br>
+            <label class="mb-2">
+              <b>Số hiệu CBCCVC: </b> {{viewHoSo.soHieuCBCCVC}}
+            </label>
+            <br>
+            <label class="mb-2">
+              <b>Họ và tên: </b> {{viewHoSo.hoVaTen}}
+            </label>
+            <br>
+            <label class="mb-2">
+              <b>Giới tính: </b> {{viewHoSo.gioiTinh}}
+            </label>
+            <br>
+            <label class="mb-2">
+              <b>Ngày sinh: </b> {{viewHoSo.ngaySinh | date:'dd/MM/Y'}}
+            </label>
+            <br>
+            <label class="mb-2">
+              <b>Nơi sinh: </b> {{viewHoSo.noiSinh}}
+            </label>
+            <br>
+            <label class="mb-2">
+              <b>Số CMND/CCCD: </b> {{viewHoSo.soCmnd}}
+            </label>
+            <br>
+          </p>
+        </section>
+        <section style="margin-top: 8px" class="ms-3">
+
+          <label class="mb-2">
+            <b>Đơn vị: </b> {{viewHoSo.donVi.tenDonVi}}
+          </label>
+          <br>
+          <label class="mb-2">
+            <b>Phòng ban: </b> {{viewHoSo.phongBan.tenPhongBan}}
+          </label>
+          <br>
+          <label class="mb-2">
+            <b>Vị trí/ Chức vụ: </b> {{viewChucVu.tenChucDanh}}
+          </label>
+          <br>
+          <label class="mb-2">
+            <b>Ngạch: </b> {{viewNgach.tenNgach}}
+          </label>
+          <br>
+          <label class="mb-2">
+            <b>Ngày vào Đảng: </b> {{viewHoSo.ngayVaoDcsvn | date:'dd/MM/Y'}}
+          </label>
+          <br>
+          <label class="mb-2">
+            <b>Trình độ chuyên môn: </b> {{viewHoSo.trinhDoChuyenMon}}
+          </label>
+          <br>
+          <label class="mb-2">
+            <b>Học hàm: </b> {{viewHoSo.hocHam}}
+          </label>
+          <br>
+          <label class="mb-2">
+            <b>Học vị: </b> {{viewHoSo.hocVi}}
+          </label>
+          <br>
+          <label class="mb-2">
+            <b>Ngoại ngữ: </b> {{viewHoSo.ngoaiNgu}}
+          </label>
+          <br>
+          <label class="mb-2">
+            <b>Trình độ tin học: </b> {{viewHoSo.tinHoc}}
+          </label>
+          <br>
+        </section>
+        <button type="button" data-bs-dismiss="modal"
+                (click)="navigate('/chi-tiet-qua-trinh-dao-tao-boi-duong/' + viewHoSo.idHoSo)"
+                class="btn btn-outline-success ms-3 mt-3">
+          Quá trình đào tạo/ bồi dưỡng
+        </button>
+        <button type="button" data-bs-dismiss="modal"
+                (click)="navigate('/chitiethoso/' + viewHoSo.idHoSo)"
+                class="btn btn-outline-primary mt-3 ms-3">
+          <i class="fa-solid fa-pen-to-square"></i>
+          Chỉnh sửa thông tin chi tiết hồ sơ
+        </button>
+      </div>
+      <div class="modal-footer">
+
+
+        <button type="button" id="view-form-btn-no" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <!--        <button type="button" (click)="onDelete(keyId)" class="btn btn-danger">Có</button>-->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Về hưu-->
+
+<div class="modal fade" id="nghihuuModal" tabindex="-1" role="dialog"
+     aria-labelledby="nghihuuModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content w-100">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nghihuuModalLabel">Quyết định nghỉ hưu</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close"
+                style="border: 0; border-radius: 25%;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addNHForm="ngForm" (ngSubmit)="onAddNghiHuu(addNHForm)">
+          <div class="mb-3">
+            <label for="Input412NH" class="form-label">Hình thức nghỉ hưu</label>
+            <select id="Input412NH" class="form-select" required
+                    [ngModel]="hinhThucNghiHuu" name="hinhThucNghiHuu">
+              <option disabled [value]="''">--- Chưa có thông tin ---</option>
+              <option>Hưởng bảo hiểm xã hội</option>
+              <option>Tinh giản biên chế</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="Input512AddNH" class="form-label">Ngày bắt đầu nghỉ hưu</label>
+            <input type="date" ngModel name="ngayNghiHuu" class="form-control"
+                   id="Input512AddNH" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="obj-form-nh"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+            <button [disabled]="addNHForm.invalid"
+                    type="submit" class="btn btn-success">
+              Lưu
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="viewnghihuuModal" tabindex="-1" role="dialog"
+     aria-labelledby="viewnghihuuModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content w-100">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewnghihuuModalLabel">Thông tin nghỉ hưu</h5>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close"
+                style="border: 0; border-radius: 25%;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addNHForm="ngForm">
+          <div class="mb-3">
+            <label for="Input5122wAddNH" class="form-label">Cán bộ</label>
+            <input type="text"
+                   [ngModel]="editQD.soHieuCBCCVC" name="soHieu" disabled
+                   class="form-control"
+                   id="Input5122wAddNH" readonly>
+            <input type="text"
+                   [ngModel]="editQD.hoVaTen" name="ten" disabled
+                   class="form-control mt-3" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="Input4122NH" class="form-label">Hình thức nghỉ hưu</label>
+            <select id="Input4122NH" class="form-select" disabled
+                    [ngModel]="editQD.hinhThucNghiHuu" name="hinhThucNghiHuu">
+              <option disabled [value]="''">--- Chưa có thông tin ---</option>
+              <option>Hưởng bảo hiểm xã hội</option>
+              <option>Tinh giản biên chế</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="Input5122AddNH" class="form-label">Ngày bắt đầu nghỉ hưu</label>
+            <input type="date" [ngModel]="editQD.ngayNghiHuu" name="ngayNghiHuu" class="form-control"
+                   id="Input5122AddNH" readonly>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="obj-form-nhv"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+              Đóng
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Nghỉ hưu (End) -->
 
 <div id="liveAlertPlaceholder" class="w-25" style="position: fixed; right: 30px; bottom: 16px;"></div>

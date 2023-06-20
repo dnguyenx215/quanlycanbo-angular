@@ -251,7 +251,7 @@ export class ChitiethosoComponent {
         console.log(err);
       }
     });
-    console.log(this.imgURL)
+    console.log(this.imgURL);
   }
 
   onChangeImage(event: Event) {
@@ -271,7 +271,7 @@ export class ChitiethosoComponent {
       error: err => {
         console.log(err.message)
       }
-    })
+    });
   }
 
 

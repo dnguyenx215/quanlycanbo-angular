@@ -18,7 +18,8 @@
             <label>Số hiệu CBCCVC:</label>
           </td>
           <td>
-            <input readonly type="text" [(ngModel)]="soHieuCB" name="soHieuCBCCVC" placeholder="CB...">
+            <input readonly type="text" class="form-control w-75"
+                   [(ngModel)]="soHieuCB" name="soHieuCBCCVC" placeholder="CB...">
           </td>
           <td>
             <label>Ảnh:</label>
@@ -43,7 +44,7 @@
                 {{item.tenDonVi}}
               </option>
             </select>
-            <input type="hidden"  [ngModel]="donViSelected" name="donVi">
+            <input type="hidden" [ngModel]="donViSelected" name="donVi">
           </td>
           <td>
             <label>Phòng ban:</label>
@@ -52,12 +53,12 @@
             <select [(ngModel)]="phongBanSelected" name="sPhongBan"
                     [compareWith]='customComparePB'
                     id="inputPhongBan" class="form-select ms-1 p-1 w-75">
-              <option disabled> --- Chọn ---</option>
+              <option disabled [value]="''"> --- Chọn phòng ban---</option>
               <option *ngFor="let item of listPhongBan" [ngValue]="item">
                 {{item.tenPhongBan}}
               </option>
             </select>
-            <input type="hidden"  [ngModel]="phongBanSelected" name="phongBan">
+            <input type="hidden" [ngModel]="phongBanSelected" name="phongBan">
           </td>
         </tr>
         <tr>
@@ -66,33 +67,36 @@
           </td>
           <td>
             <input readonly type="hidden" name="idHoSo">
-            <input required type="text" ngModel name="hoVaTen">
+            <input required type="text" class="form-control w-75"
+                   ngModel name="hoVaTen">
           </td>
           <td>
-            <label>Ngày sinh</label>
+            <label>Ngày sinh:</label>
           </td>
           <td>
-            <input required type="date" ngModel name="ngaySinh">
+            <input required type="date" class="form-control w-50"
+                   ngModel name="ngaySinh">
           </td>
         </tr>
         <tr>
           <td>
-            <label>Giới tính</label>
+            <label>Giới tính:</label>
           </td>
           <td>
             <select required [(ngModel)]="gioiTinhSelected" name="gioiTinh" id="inputGioiTinh"
-                    class="form-select w-50 p-1 s-gioi-tinh">
-              <option [selected]="true" [disabled]="true" [value]="''">--- Chọn ---</option>
+                    class="form-select w-75 py-1 ps-3 s-gioi-tinh">
+              <option [selected]="true" [disabled]="true" [value]="''">--- Chưa xác định ---</option>
               <option>Nam</option>
               <option>Nữ</option>
             </select>
           </td>
           <td>
-            <label>Nơi sinh</label>
+            <label>Nơi sinh:</label>
           </td>
           <td>
-            <select required [(ngModel)]="noiSinhSelected" name="noiSinh" id="inputNS"
-                    class="form-select w-50 p-1 s-gioi-tinh">
+            <select required [(ngModel)]="noiSinhSelected"
+                    name="noiSinh" id="inputNS"
+                    class="form-select w-50 ms-1 py-1 ps-3">
               <option *ngFor="let tinhThanh of provinces">{{tinhThanh}}</option>
             </select>
           </td>
@@ -101,16 +105,18 @@
           <td>
             <label>Hộ khẩu thường trú:</label>
           </td>
-          <td colspan="2">
-            <input required type="text" class="w-100" ngModel name="hoKhauThuongTru">
+          <td colspan="4">
+            <input required type="text" class="form-control w-75"
+                   ngModel name="hoKhauThuongTru">
           </td>
         </tr>
         <tr>
           <td>
             <label>Nơi ở hiện tại:</label>
           </td>
-          <td colspan="2">
-            <input required class="w-100" type="text" ngModel name="noiOHienTai">
+          <td colspan="4">
+            <input required class="w-75 form-control" type="text"
+                   ngModel name="noiOHienTai">
           </td>
         </tr>
         <tr>
@@ -119,8 +125,8 @@
           </td>
           <td>
             <select required ngModel name="danToc"
-                    id="inputDanToc" class="form-select w-50 p-1 ms-1">
-              <option selected disabled value=""> --- Chọn ---</option>
+                    id="inputDanToc" class="form-select w-75 ps-3 p-1 ms-1">
+              <option selected disabled value=""> --- Chưa xác định ---</option>
               <option *ngFor="let itemdt of listDanToc" [value]="itemdt.maDanToc">
                 {{itemdt['tenDanToc']}}
               </option>
@@ -132,8 +138,8 @@
           <td>
             <select required ngModel name="tonGiao"
                     id="inputTonGiao"
-                    class="form-select w-50 p-1 ms-1 mt-2">
-              <option selected disabled value=""> --- Chọn ---</option>
+                    class="form-select w-75 p-1 ps-3 ms-1 mt-2">
+              <option selected disabled value=""> --- Chưa xác định ---</option>
               <option *ngFor="let itemdt of listTonGiao" [value]="itemdt.maTonGiao">
                 {{itemdt['tenTonGiao']}}
               </option>
@@ -142,10 +148,11 @@
         </tr>
         <tr>
           <td>
-            <label>CMND/CCCD:</label>
+            <label>Số CMND/CCCD:</label>
           </td>
           <td>
-            <input required type="number" ngModel name="soCmnd">
+            <input required type="number" class="form-control w-75"
+                   ngModel name="soCmnd">
           </td>
           <td>
             <label>Vị trí/ Chức vụ:</label>
@@ -153,8 +160,8 @@
           <td>
             <select required ngModel name="chucVu"
                     id="inputChucVu"
-                    class="form-select ms-1 mt-2 w-75 p-1">
-              <option value="" disabled>--- Chọn ---</option>
+                    class="form-select ms-1 mt-2 w-75 ps-3 p-1">
+              <option value="" disabled>--- Chọn vị trí công việc/ Chức vụ ---</option>
               <option *ngFor="let item of listChucVu" [value]="item.maChucDanh">
                 {{item['tenChucDanh']}}
               </option>
@@ -166,16 +173,17 @@
             <label>Ngày nhận vị trí/ bổ nhiệm:</label>
           </td>
           <td>
-            <input required type="date" ngModel name="ngayBoNhiem">
+            <input required type="date" class="form-control w-75"
+                   ngModel name="ngayBoNhiem">
           </td>
           <td>
-            <label>Ngạch chức danh:</label>
+            <label>Ngạch:</label>
           </td>
           <td>
             <select required [(ngModel)]="maNgachSelect" name="maNgach"
                     id="ngachChucDanh" (change)="setBacLuong()"
-                    class="form-select w-75 p-1 ms-1 mt-2">
-              <option [selected]="true" [disabled]="true" value="">--- Lựa chọn ---</option>
+                    class="form-select w-75 p-1 ps-3 ms-1 mt-2">
+              <option [selected]="true" [disabled]="true" value="">--- Chọn ngạch ---</option>
               <option *ngFor="let item of listNgach" [value]="item.maNgach">
                 {{item['tenNgach']}}
               </option>
@@ -187,44 +195,48 @@
             <label>Bậc lương:</label>
           </td>
           <td>
-            <input type="number" [(ngModel)]="bacLuong" name="bacLuong" id="bacLuong"
+            <input type="number" class="form-control w-25"
+                   [(ngModel)]="bacLuong" name="bacLuong" id="bacLuong"
                    min="1" max="12" (change)="tinhHeSo(maNgachSelect)">
           </td>
           <td>
             <label>Hệ số lương:</label>
           </td>
           <td>
-            <input type="number" [(ngModel)]="heSoLuong" name="heSoLuong" id="heSoLuong" readonly [min]="0">
+            <input type="number" class="form-control w-25"
+                   [(ngModel)]="heSoLuong" name="heSoLuong" id="heSoLuong" readonly [min]="0">
           </td>
         </tr>
         <tr>
           <td>
-            <label>Phụ cấp thâm niên vượt khung:</label>
+            <label>Phụ cấp vượt khung:</label>
           </td>
           <td>
-            <input type="number" ngModel name="phuCapThamNienVuotKhung" [defaultValue]="0" [min]="0">
+            <input type="number" class="form-control w-50"
+                   [ngModel]="pcVuotKhungValue" name="phuCapThamNienVuotKhung" [defaultValue]="0" [min]="0">
           </td>
           <td>
-            <label>Hệ số phụ cấp chức vụ:</label>
+            <label>Phụ cấp chức vụ:</label>
           </td>
           <td>
-            <input type="number" ngModel name="heSoPhuCapChucVu" [defaultValue]="0" [min]="0">
+            <input type="number" class="form-control w-50"
+                   [ngModel]="pcChucVuValue" name="heSoPhuCapChucVu" [defaultValue]="0" [min]="0">
           </td>
         </tr>
         <tr>
           <td>
-            <label>Ngày vào đảng CSVN:</label>
+            <label>Ngày vào Đảng CSVN:</label>
           </td>
           <td>
-            <input required type="date" ngModel name="ngayVaoDcsvn">
+            <input type="date" class="form-control w-50"
+                   ngModel name="ngayVaoDcsvn">
           </td>
           <td>
             <label>Số thẻ đảng:</label>
           </td>
           <td>
-            <label>
-              <input required type="text" ngModel name="soTheDang">
-            </label>
+            <input type="text" class="form-control w-50"
+                   ngModel name="soTheDang">
           </td>
         </tr>
         <tr>
@@ -308,17 +320,21 @@
             <label>Bảo hiểm xã hội:</label>
           </td>
           <td>
-            <input type="text" ngModel name="soBaoHiemXh">
+            <input type="text" class="form-control w-50"
+                   ngModel name="soBaoHiemXh">
           </td>
         </tr>
         <tr>
-          <td colspan="2" align="center">
-            <button type="submit" class="btn btn-success py-2 px-3 mt-5" [disabled]="FormAdd.invalid">
-              Xác nhận
-            </button>
-          </td>
-          <td>
-            <input type="button" (click)="setSoHieuCB()" value="Nhập lại" class="btn btn-secondary py-2 px-3 mt-5">
+          <td colspan="4">
+            <article class="d-flex align-content-center justify-content-center">
+              <button type="submit" class="btn btn-success py-2 px-3 mt-5 me-5"
+                      [disabled]="FormAdd.invalid">
+                <i class="fa-solid fa-floppy-disk me-1"></i>
+                Xác nhận
+              </button>
+              <input type="button" (click)="setSoHieuCB()" value="Nhập lại"
+                     class="btn btn-secondary py-2 px-3 mt-5">
+            </article>
           </td>
         </tr>
         </tbody>

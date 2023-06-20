@@ -19,6 +19,7 @@ export class HesongachbacluongComponent {
   public keyId: string = '';
   public loai: string = '';
   public slNhom = document.getElementById('lb-sl-nhom');
+  nhomNgachSelected: any = '';
 
   constructor(private theService: NgachbacluongService, private router : Router) {
   }
@@ -115,7 +116,8 @@ export class HesongachbacluongComponent {
     );
   }
 
-  public onUpdate(obj: NgachBacLuong): void {
+  public onUpdate(form: NgForm): void {
+    const obj = form.value;
     let hs : number[] = [];
     hs.push(obj.bac1);
     hs.push(obj.bac2);
@@ -136,10 +138,10 @@ export class HesongachbacluongComponent {
       (response: NgachBacLuong) => {
         console.log(response);
         this.getListNgachBacLuong();
-
         const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
         // @ts-ignore
         this.alertHold(alertPlaceholder, "Update successfully!", "info");
+        hs = [0,0,0,0,0,0,0,0,0,0,0,0];
       },
       (error: HttpErrorResponse) => {
         alert(error.message);

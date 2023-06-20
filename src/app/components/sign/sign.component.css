@@ -1,17 +1,17 @@
 #thebody {
   margin: 0;
   padding: 0;
-  background-color: rgba(160, 250, 255, 0.5);
-  font-family: sans-serif;
-  background-size: auto;
-  width: 100%!important;
-  height: 100%!important;
-  overflow: hidden
+  /*background: url("https://wallpapercave.com/wp/wp8478134.jpg");*/
+  font-family: Roboto, sans-serif;
+  background-size: cover;
+  overflow: hidden;
+
 }
 
 @media screen and (max-width: 600px) {
   #thebody {
-    background-size: cover;: fixed
+    background-size: cover;: fixed;
+    background-image: url("https://wallpapercave.com/wp/wp8478134.jpg");
   }
 }
 #particles-js {
@@ -23,29 +23,28 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 45vw;
+  width: 36vw;
   min-height: 200px;
-  background: rgba(0, 150, 127, 0.5);
+  background: rgba(186, 204, 36, 0.95);
   border-radius: 10px;
   padding: 40px;
   box-sizing: border-box
 }
 
 .user {
-  margin: 0 auto;
   display: block;
-  margin-bottom: 20px
+  margin: 0 auto 20px;
 }
 
 h3, h5 {
   margin: 0;
-  color: #59238F;
+  color: #104491;
   text-align: center
 }
 
 h4 {
   margin: 0;
-  color: #8f6023;
+  color: #104491;
   text-align: center
 }
 

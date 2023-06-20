@@ -34,6 +34,8 @@ import * as FusionCharts from "fusioncharts";
 import * as charts from "fusioncharts/fusioncharts.charts";
 import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 import {FusionChartsModule} from "angular-fusioncharts";
+import {NgOptimizedImage} from "@angular/common";
+import { HeaderComponent } from './components/architect/header/header.component';
 
 // Pass the fusioncharts library and chart modules
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
@@ -60,17 +62,19 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
     HinhThucKyLuatComponent,
     PhongbanComponent,
     ChitietquatrinhdaotaoboiduongComponent,
+    HeaderComponent,
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    RouterOutlet,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    NgxPaginationModule,
-    FusionChartsModule,
-  ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        RouterOutlet,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        NgxPaginationModule,
+        FusionChartsModule,
+        NgOptimizedImage,
+    ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]
 })

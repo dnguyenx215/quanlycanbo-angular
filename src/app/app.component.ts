@@ -29,7 +29,15 @@ export class AppComponent implements OnInit{
   }
 
   public hiddenHeaderAndFooter(): boolean {
-    return !window.localStorage.getItem('token');
+    const container = document.getElementById('main-container');
+    const token = window.localStorage.getItem('token');
+    if(token === null) {
+      container!.style.backgroundImage = "url('https://wallpapercave.com/wp/wp8478134.jpg')";
+    }
+    else {
+      container!.style.backgroundColor = "rgba(255,251,208,0.15)";
+    }
+    return !token;
 
   }
 

@@ -80,3 +80,7 @@ input[type=submit]:hover {
 .s-gioi-tinh {
   margin-left: 5px;
 }
+
+label {
+  font-weight: 500;
+}

@@ -7,10 +7,11 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {NgachbacluongService} from "../../services/ngachbacluong.service";
 import {NgachBacLuong} from "../../models/ngachbacluong";
 import {formatNumber} from "@angular/common";
-import { LOCALE_ID, NgModule } from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {Router} from "@angular/router";
 import {PhongBanService} from "../../services/phongban.service";
 import {PhongBan} from "../../models/phongban";
+import {ChucVuService} from "../../services/chucvu.service";
 
 @Component({
   selector: 'app-bangluong',
@@ -19,7 +20,7 @@ import {PhongBan} from "../../models/phongban";
 })
 export class BangluongComponent {
   public listHoSo: HoSo[] = [];
-  public editHoSo: HoSo  = new HoSo();
+  public editHoSo: HoSo = new HoSo();
   public keyId: number = 0;
 
   protected ten: string = '';
@@ -29,12 +30,15 @@ export class BangluongComponent {
   private maxSizepagi: number = 10;
   donViSelected: DonVi = new DonVi();
   listPhongBan: PhongBan[] = [];
-  phongBanSelected: PhongBan = new PhongBan();
+  phongBanSelected: any = '';
+  bacLuongMax: any = 12;
+  tenChucVu: any = '';
 
   constructor(private theService: HoSoService,
               private dvService: DonViService, private pbService: PhongBanService,
-              private router : Router,
-              private ngachService: NgachbacluongService, @Inject(LOCALE_ID) public locale: string) {}
+              private router: Router, private cvService: ChucVuService,
+              private ngachService: NgachbacluongService, @Inject(LOCALE_ID) public locale: string) {
+  }
 
   ngOnInit(): void {
     this.setDefaultDonViSelected();
@@ -68,12 +72,12 @@ export class BangluongComponent {
     );
   }
 
-  public getSelectDonVi(madv : string): void {
+  public getSelectDonVi(madv: string): void {
     this.theService.listHoSoByDonVi(madv).subscribe({
-      next : value => {
+      next: value => {
         this.listHoSo = value;
       },
-      error : (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
 
       }
     })
@@ -109,16 +113,24 @@ export class BangluongComponent {
     if (mode === 'edit') {
       this.editHoSo = obj;
       this.keyId = obj.idHoSo;
+      this.setHeSoMax(obj.maNgach);
       button.setAttribute('data-bs-target', '#updateModal');
+    }
+    if (mode === 'phucap') {
+      this.editHoSo = obj;
+      this.keyId = obj.idHoSo;
+      this.getTenChucVu(obj.chucVu);
+      // this.setHeSoMax(obj.maNgach);
+      button.setAttribute('data-bs-target', '#phucapModal');
     }
     // @ts-ignore
     container.appendChild(button);
     button.click();
   }
 
-  public getMucLuong(heSo : number): string {
+  public getMucLuong(heSo: number): string {
     let mucLuong = 1490000 * heSo;
-    return formatNumber(mucLuong, this.locale , '0.0');
+    return formatNumber(mucLuong, this.locale, '0.0');
   }
 
 
@@ -162,10 +174,11 @@ export class BangluongComponent {
   }
 
 
-  tinhHeSo(maNgach : string) {
+
+  tinhHeSo(maNgach: string) {
     const inputBac = document.getElementById('Input3Edit');
     const inputHeSo = document.getElementById('Input4Edit');
-    let heSoArr : number[] = [];
+    let   heSoArr: number[] = [];
     this.ngachService.getNgachBacLuongByID(maNgach).subscribe({
       next: (data) => {
         heSoArr.push(data.bac1);
@@ -180,16 +193,17 @@ export class BangluongComponent {
         heSoArr.push(data.bac10);
         heSoArr.push(data.bac11);
         heSoArr.push(data.bac12);
-        for(let i = 0; i<heSoArr.length; i++) {
+        for (let i = 0; i < heSoArr.length; i++) {
           // @ts-ignore
-          if((inputBac.value - 1) === i) {
-                // @ts-ignore
+          if ((inputBac.value - 1) === i) {
+            // @ts-ignore
             inputHeSo.value = heSoArr[i];
             this.editHoSo.heSoLuong = heSoArr[i];
           }
         }
       },
-      error : err => {}
+      error: err => {
+      }
     });
 
   }
@@ -209,11 +223,11 @@ export class BangluongComponent {
       }
     });
   }
+
   customCompareDV(o1: DonVi, o2: DonVi) {
-    if(o1 !== null && o2 !== null) {
+    if (o1 !== null && o2 !== null) {
       return o1.maDonVi == o2.maDonVi;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -224,7 +238,8 @@ export class BangluongComponent {
       next: data => {
         this.listHoSo = data;
       },
-      error: ers => {}
+      error: ers => {
+      }
     });
   }
 
@@ -252,7 +267,64 @@ export class BangluongComponent {
   }
 
 
+  private setHeSoMax(maNgach: string) {
+    let heSoArray: number[] = [];
+    const inputBac = document.getElementById('Input3Edit');
+    // const inputHeSo = document.getElementById('Input4Edit');
+    this.ngachService.getNgachBacLuongByID(maNgach).subscribe({
+      next: (data) => {
+        heSoArray.push(data.bac1);
+        heSoArray.push(data.bac2);
+        heSoArray.push(data.bac3);
+        heSoArray.push(data.bac4);
+        heSoArray.push(data.bac5);
+        heSoArray.push(data.bac6);
+        heSoArray.push(data.bac7);
+        heSoArray.push(data.bac8);
+        heSoArray.push(data.bac9);
+        heSoArray.push(data.bac10);
+        heSoArray.push(data.bac11);
+        heSoArray.push(data.bac12);
+        console.log('bacluongmax() push ' + heSoArray);
+        for (let i = 0; i < heSoArray.length; i++) {
+          if (heSoArray[i + 1] == 0) {
+            this.bacLuongMax = i + 1;
+            console.log(i);
+            break;
+          }
+        }
+
+      },
+      error: err => {
+      }
+    });
+
+  }
+
+  onUpdatePhuCap(eobj: HoSo) {
+    // @ts-ignore
+    document.getElementById('edit-pc-obj-btn-close').click();
+    this.theService.updateHoSoPhuCap(eobj.phuCapThamNienVuotKhung, eobj.heSoPhuCapChucVu, eobj.idHoSo).subscribe(
+      (response: number) => {
+        this.getListHoSo();
+
+        const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+        // @ts-ignore
+        this.alertHold(alertPlaceholder, "Cập nhật thành công!", "info");
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
 
 
+  getTenChucVu(id: any) {
+    this.cvService.getChucVu(id).subscribe({
+      next: value => {
+        this.tenChucVu = value.tenChucDanh;
+      },
+    });
+  }
 
 }

@@ -1,15 +1,20 @@
-<h5 class="w-100 text-center mt-5">BẢNG HỆ SỐ BẬC LƯƠNG</h5>
+<h5 class="w-100 text-center mt-3 mb-5">BẢNG HỆ SỐ BẬC LƯƠNG</h5>
 <div class="container mt-2" id="main-container">
   <div class="d-flex">
-    <a class="btn btn-sm btn-outline-primary mb-3 ms-3 text-decoration-none"
+    <a class="btn btn-outline-primary mb-3 ms-3 text-decoration-none"
        id="dm-heso" (click)="navigate('/ngach')">
       Ngạch bậc lương
     </a>
     <form class="ms-5" #selectForm="ngForm" id="selectForm">
-      <label for="lb-sl-nhom" class="me-1">Nhóm ngạch:</label>
-      <select ngModel name="c-nhom" class="form-select-sm" id="lb-sl-nhom" required (change)="selectNhom(selectForm)">
-        <option selected disabled>--- Lựa chọn ---</option>
-        <option *ngFor="let item of listNhom" [ngValue]="item">{{item}}</option>
+      <select [(ngModel)]="nhomNgachSelected" name="c-nhom" class="form-select mb-3" id="lb-sl-nhom"
+              required (change)="selectNhom(selectForm)">
+        <option value="" disabled>--- Chọn nhóm ngạch ---</option>
+        <option>A3</option>
+        <option>A2</option>
+        <option>A1</option>
+        <option>A0</option>
+        <option>B</option>
+        <option>C</option>
       </select>
     </form>
   </div>
@@ -38,18 +43,18 @@
     <tr *ngFor="let item of listNgachBacLuong">
       <td>{{item.maNgach}}</td>
       <td>{{item.loai}}</td>
-      <td>{{item.bac1}}</td>
-      <td>{{item.bac2}}</td>
-      <td>{{item.bac3}}</td>
-      <td>{{item.bac4}}</td>
-      <td>{{item.bac5}}</td>
-      <td>{{item.bac6}}</td>
-      <td>{{item.bac7}}</td>
-      <td>{{item.bac8}}</td>
-      <td>{{item.bac9}}</td>
-      <td>{{item.bac10}}</td>
-      <td>{{item.bac11}}</td>
-      <td>{{item.bac12}}</td>
+      <td>{{item.bac1 !== 0 ? item.bac1 : ''}}</td>
+      <td>{{item.bac2 !== 0 ? item.bac2 : ''}}</td>
+      <td>{{item.bac3 !== 0 ? item.bac3 : ''}}</td>
+      <td>{{item.bac4 !== 0 ? item.bac4 : ''}}</td>
+      <td>{{item.bac5 !== 0 ? item.bac5 : ''}}</td>
+      <td>{{item.bac6 !== 0 ? item.bac6 : ''}}</td>
+      <td>{{item.bac7 !== 0 ? item.bac7 : ''}}</td>
+      <td>{{item.bac8 !== 0 ? item.bac8 : ''}}</td>
+      <td>{{item.bac9 !== 0 ? item.bac9 : ''}}</td>
+      <td>{{item.bac10 !== 0 ? item.bac10 : ''}}</td>
+      <td>{{item.bac11 !== 0 ? item.bac11 : ''}}</td>
+      <td>{{item.bac12 !== 0 ? item.bac12 : ''}}</td>
       <td>
         <div class="float-right btn-group btn-group-sm">
           <a class="btn btn-sm btn-warning tooltips" data-placement="top" data-toggle="tooltip"
@@ -96,82 +101,82 @@
             <input type="text" ngModel="{{editNgachBacLuong?.loai}}"
                    name="loai2" class="form-control" id="InputZEdit" disabled>
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac1 === 0">
             <label for="Input2Edit" class="form-label">Bậc 1</label>
             <input type="number" ngModel="{{editNgachBacLuong?.bac1}}" required
                    name="bac1" class="form-control" id="Input2Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac2 === 0">
             <label for="Input3Edit" class="form-label">Bậc 2</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac2}}"
                    name="bac2"
                    class="form-control" id="Input3Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac3 === 0">
             <label for="Input4Edit" class="form-label">Bậc 3</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac3}}"
                    name="bac3"
                    class="form-control" id="Input4Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac4 === 0">
             <label for="Input5Edit" class="form-label">Bậc 4</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac4}}"
                    name="bac4"
                    class="form-control" id="Input5Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac5 === 0">
             <label for="Input6Edit" class="form-label">Bậc 5</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac5}}"
                    name="bac5"
                    class="form-control" id="Input6Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac6 === 0">
             <label for="Input7Edit" class="form-label">Bậc 6</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac6}}"
                    name="bac6"
                    class="form-control" id="Input7Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac7 === 0">
             <label for="Input8Edit" class="form-label">Bậc 7</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac7}}"
                    name="bac7"
                    class="form-control" id="Input8Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac8 === 0">
             <label for="Input9Edit" class="form-label">Bậc 8</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac8}}"
                    name="bac8"
                    class="form-control" id="Input9Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac9 === 0">
             <label for="Input10Edit" class="form-label">Bậc 9</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac9}}"
                    name="bac9"
                    class="form-control" id="Input10Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac10 === 0">
             <label for="Input11Edit" class="form-label">Bậc 10</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac10}}"
                    name="bac10"
                    class="form-control" id="Input11Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac11 === 0">
             <label for="Input12Edit" class="form-label">Bậc 11</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac11}}"
                    name="bac11"
                    class="form-control" id="Input12Edit">
           </div>
-          <div class="mb-2">
+          <div class="mb-2" [hidden]="editNgachBacLuong?.bac12 === 0">
             <label for="Input13Edit" class="form-label">Bậc 12</label>
             <input type="number" required
                    ngModel="{{editNgachBacLuong?.bac12}}"
@@ -184,7 +189,7 @@
                     data-bs-dismiss="modal">
               Đóng
             </button>
-            <button (click)="onUpdate(editForm.value)" type="submit"
+            <button (click)="onUpdate(editForm)" type="submit"
                     class="btn btn-warning">
               Lưu
             </button>

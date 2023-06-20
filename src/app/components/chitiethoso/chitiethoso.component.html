@@ -11,7 +11,7 @@
     </div>
     <form #editForm="ngForm">
       <div>
-          <img style="width: 125px; height: 125px; margin: 16px;"
+          <img style="width: 150px; height: 150px; margin: 16px;"
                [src]="imgURL" alt="image" id="img-canbo">
           <input type="file" [(ngModel)]="imagePath"
                  class="form-control w-50"
@@ -22,10 +22,21 @@
         <tbody>
         <tr>
           <td>
-            <label>ID hồ sơ:</label>
+            <label>Trạng thái hồ sơ:</label>
           </td>
           <td>
-            <input type="number" ngModel="{{loadHoSo.idHoSo}}" name="idHoSo" readonly>
+            <input type="number" ngModel="{{loadHoSo.idHoSo}}" name="idHoSo" [hidden]="true">
+            <select [(ngModel)]="loadHoSo.trangThaiHoSo" class="ms-1 form-select p-1 w-75"
+                    name="trangThaiHoSo">
+              <option>Đang làm việc</option>
+              <option>Tự nguyện thôi việc</option>
+              <option>Buộc thôi việc</option>
+              <option>Tạm nghỉ</option>
+              <option>Bãi nhiệm</option>
+              <option>Miễn nhiệm</option>
+              <option>Về hưu</option>
+              <option>Tinh giản biên chế</option>
+            </select>
           </td>
           <td>
             <label>Đơn vị:</label>
@@ -48,7 +59,8 @@
             <label>Số hiệu CBCCVC:</label>
           </td>
           <td>
-            <input type="text" class="ms-1" ngModel="{{loadHoSo.soHieuCBCCVC}}" name="soHieuCBCCVC" readonly>
+            <input type="text" class="ms-1 form-control w-75"
+                   ngModel="{{loadHoSo.soHieuCBCCVC}}" name="soHieuCBCCVC" readonly>
           </td>
           <td>
             <label>Phòng ban:</label>
@@ -68,18 +80,20 @@
             <label>Họ và tên:</label>
           </td>
           <td>
-            <input type="text" ngModel="{{loadHoSo.hoVaTen}}" name="hoVaTen">
+            <input type="text" ngModel="{{loadHoSo.hoVaTen}}" class="form-control ms-1 w-75"
+                   name="hoVaTen">
           </td>
           <td>
-            <label>Ngày sinh</label>
+            <label>Ngày sinh:</label>
           </td>
           <td>
-            <input type="date" class="ms-1" ngModel="{{loadHoSo.ngaySinh}}" name="ngaySinh">
+            <input type="date" class="ms-1 form-control w-50" ngModel="{{loadHoSo.ngaySinh}}"
+                   name="ngaySinh">
           </td>
         </tr>
         <tr>
           <td>
-            <label>Nơi sinh</label>
+            <label>Nơi sinh:</label>
           </td>
           <td>
             <select [(ngModel)]="loadHoSo.noiSinh" name="noiSinh"
@@ -103,16 +117,18 @@
           <td>
             <label>Hộ khẩu thường trú:</label>
           </td>
-          <td colspan="2">
-            <input type="text" class="w-100" ngModel="{{loadHoSo.hoKhauThuongTru}}" name="hoKhauThuongTru">
+          <td colspan="4">
+            <input type="text" class="w-100 form-control" ngModel="{{loadHoSo.hoKhauThuongTru}}"
+                   name="hoKhauThuongTru">
           </td>
         </tr>
         <tr>
           <td>
             <label>Nơi ở hiện tại:</label>
           </td>
-          <td colspan="2">
-            <input type="text" class="w-100" ngModel="{{loadHoSo.noiOHienTai}}" name="noiOHienTai">
+          <td colspan="4">
+            <input type="text"
+                   class="w-100 form-control" ngModel="{{loadHoSo.noiOHienTai}}" name="noiOHienTai">
           </td>
         </tr>
         <tr>
@@ -145,10 +161,11 @@
             <label>CMND/CCCD:</label>
           </td>
           <td>
-            <input type="text" ngModel="{{loadHoSo.soCmnd}}" name="soCmnd">
+            <input type="text" class="form-control ms-1 w-50"
+                   ngModel="{{loadHoSo.soCmnd}}" name="soCmnd">
           </td>
           <td>
-            <label>Chức vụ:</label>
+            <label>Vị trí/ Chức vụ:</label>
           </td>
           <td>
             <select [(ngModel)]="loadHoSo.chucVu" name="chucVu"
@@ -162,13 +179,14 @@
         </tr>
         <tr>
           <td>
-            <label>Ngày bổ nhiệm:</label>
+            <label>Ngày nhận vị trí/ bổ nhiệm:</label>
           </td>
           <td>
-            <input type="date" ngModel="{{loadHoSo.ngayBoNhiem}}" name="ngayBoNhiem">
+            <input type="date" class="form-control w-50"
+                   ngModel="{{loadHoSo.ngayBoNhiem}}" name="ngayBoNhiem">
           </td>
           <td>
-            <label>Ngạch chức danh:</label>
+            <label>Ngạch:</label>
           </td>
           <td>
             <select [(ngModel)]="loadHoSo.maNgach" name="maNgach"
@@ -185,7 +203,8 @@
             <label>Bậc lương:</label>
           </td>
           <td>
-            <input type="number" id="in-bac-luong" [(ngModel)]="loadHoSo.bacLuong"
+            <input type="number" id="in-bac-luong" class="form-control w-25"
+                   [(ngModel)]="loadHoSo.bacLuong"
                    (change)="tinhHeSo(loadHoSo.maNgach, loadHoSo.bacLuong)"
                    name="bacLuong" [defaultValue]="1" [min]="1" [max]="12">
           </td>
@@ -193,7 +212,8 @@
             <label>Hệ số lương:</label>
           </td>
           <td>
-            <input type="number" [(ngModel)]="loadHoSo.heSoLuong" name="heSoLuong" readonly
+            <input type="number" class="form-control w-25"
+                   [(ngModel)]="loadHoSo.heSoLuong" name="heSoLuong" readonly
                    id="he-so-luong" [min]="0" [max]="10">
           </td>
         </tr>
@@ -202,15 +222,17 @@
             <label>Phụ cấp vượt khung:</label>
           </td>
           <td>
-            <input type="number"
+            <input type="number" class="form-control w-50"
                    ngModel="{{loadHoSo.phuCapThamNienVuotKhung}}" name="phuCapThamNienVuotKhung"
+                   [defaultValue]="0"
                    [min]="0">
           </td>
           <td>
             <label>Phụ cấp chức vụ:</label>
           </td>
           <td>
-            <input type="number" ngModel="{{loadHoSo.heSoPhuCapChucVu}}" name="heSoPhuCapChucVu">
+            <input type="number" class="form-control w-75"
+                   ngModel="{{loadHoSo.heSoPhuCapChucVu}}" name="heSoPhuCapChucVu">
           </td>
         </tr>
         <tr>
@@ -218,14 +240,16 @@
             <label>Ngày vào đảng CSVN:</label>
           </td>
           <td>
-            <input type="date" ngModel="{{loadHoSo.ngayVaoDcsvn}}" name="ngayVaoDcsvn">
+            <input type="date" class="form-control w-50"
+                   ngModel="{{loadHoSo.ngayVaoDcsvn}}" name="ngayVaoDcsvn">
           </td>
           <td>
             <label>Số thẻ đảng:</label>
           </td>
           <td>
             <label>
-              <input type="text" ngModel="{{loadHoSo.soTheDang}}" name="soTheDang">
+              <input type="text" class="form-control w-50"
+                     ngModel="{{loadHoSo.soTheDang}}" name="soTheDang">
             </label>
           </td>
         </tr>
@@ -310,17 +334,19 @@
             <label>Bảo hiểm xã hội:</label>
           </td>
           <td>
-            <input type="text" ngModel="{{loadHoSo.soBaoHiemXh}}" name="soBaoHiemXh">
+            <input type="text" class="form-control w-50"
+                   ngModel="{{loadHoSo.soBaoHiemXh}}" name="soBaoHiemXh">
           </td>
         </tr>
         <tr>
-          <td colspan="2" align="center">
+          <td colspan="4" align="center">
             <button type="submit" class="btn btn-success px-3 py-2 mt-5"
-                    (click)="onUpdate(editForm.value)">Lưu
+                    (click)="onUpdate(editForm.value)">
+              <i class="fa-regular fa-floppy-disk"></i>
+              Lưu
             </button>
-          </td>
-          <td>
-            <a (click)="navigate('/manage')" class="btn btn-secondary px-3 py-2 mt-5">Quay lại</a>
+            <a (click)="navigate('/manage')"
+               class="btn btn-secondary px-3 py-2 mt-5 ms-5">Quay lại</a>
           </td>
         </tr>
         </tbody>

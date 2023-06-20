@@ -3,12 +3,13 @@ import {PhongBan} from "./phongban";
 
 export class HoSo {
   idHoSo : number = 0;
+  trangThaiHoSo : string = '';
   soHieuCBCCVC : string = '';
   donVi : DonVi = new DonVi();
   phongBan : PhongBan = new PhongBan();
   imageUrl : Blob = new Blob();
   hoVaTen : string = '';
-  ngaySinh ?: string;
+  ngaySinh : string = '';
   gioiTinh : string = '';
   noiSinh : string = '';
   hoKhauThuongTru ?: string;
@@ -40,10 +41,9 @@ export class HoSo {
   soQuyetDinhKyLuat: string = '';
   hinhThucKyLuat: string = '';
   ngayKyLuat: string = '';
-  ngayGuiDaoTaoBoiDuong : string = '';
+  ngayNghiHuu : string = '';
+  hinhThucNghiHuu : string = '';
   tenChuyenNganhDaoTaoBoiDuong : string = '';
-  trangThaiDaoTaoBoiDuong : string = '';
-
   constructor() {
   }
 }

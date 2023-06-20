@@ -77,12 +77,12 @@
           <!--          </div>-->
           <div class="mb-3">
             <label for="Input2Add" class="form-label">Đơn vị chủ quản</label>
-            <select [(ngModel)]="donViSelected" name="maDonVi"
-                    [compareWith]="customCompareDV"
+            <select [(ngModel)]="donViSelected" name="DonVi"
+                    [compareWith]="customCompareDV" disabled
                     class="form-select" id="Input2Add" required>
               <option *ngFor="let idv of listDonVi" [ngValue]="idv">{{idv.tenDonVi}}</option>
             </select>
-            <!--            <input type="hidden" [ngModel]="donViSelected" name="maDonVi">-->
+                        <input type="hidden" [ngModel]="donViSelected" name="maDonVi">
           </div>
           <div class="mb-3">
             <label for="Input1Add" class="form-label">Tên phòng ban</label>

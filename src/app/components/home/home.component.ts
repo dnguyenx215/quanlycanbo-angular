@@ -17,6 +17,9 @@ import {PhongBanService} from "../../services/phongban.service";
 import {PhongBan} from "../../models/phongban";
 import {QuaTrinhDaoTaoBoiDuongService} from "../../services/quatrinhdaotaoboiduong.service";
 import {QuaTrinhDaoTaoBoiDuong} from "../../models/quatrinhdaotaoboiduong";
+import {DomSanitizer} from "@angular/platform-browser";
+import {NgachBacLuong} from "../../models/ngachbacluong";
+import {NgachbacluongService} from "../../services/ngachbacluong.service";
 
 @Component({
   selector: 'app-home',
@@ -28,7 +31,8 @@ export class HomeComponent {
   public listHoSo: HoSo[] = [];
   public listDonVi: DonVi[] = [];
   public editQD: HoSo = new HoSo();
-  public deleteHoSo: HoSo | undefined;
+  public deleteHoSo: HoSo = new HoSo();
+  public viewHoSo: HoSo = new HoSo();
   public keyId: number = 0;
   public htKhenThuongList: HinhThucKhenThuong[] = [];
   public htKyLuatList: HinhThucKyLuat[] = [];
@@ -45,7 +49,8 @@ export class HomeComponent {
   listPhongBan: PhongBan[] = [];
 
   constructor(private theService: HoSoService, private dvService: DonViService, private router: Router,
-              private cvService: ChucVuService, private pbService: PhongBanService,
+              private cvService: ChucVuService, private ngachService: NgachbacluongService,
+              private pbService: PhongBanService, private sanitizer: DomSanitizer,
               private qdktService: HinhThucKhenThuongService, private quaTrinhDTBDService: QuaTrinhDaoTaoBoiDuongService,
               private qdklService: HinhThucKyLuatService) {
   }
@@ -134,7 +139,7 @@ export class HomeComponent {
         this.p = Math.ceil((this.listHoSo.length - 1) / this.maxSizepagi);
         const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
         // @ts-ignore
-        this.alertHold(alertPlaceholder, "Delete successfully!", "danger");
+        this.alertHold(alertPlaceholder, "Xoá hồ sơ thành công!", "danger");
       },
       error: (HttpErrorResponse) => {
         alert(HttpErrorResponse.message);
@@ -187,6 +192,14 @@ export class HomeComponent {
       this.keyId = obj.idHoSo;
       button.setAttribute('data-bs-target', '#deleteModal');
     }
+    if (mode === 'view-detail') {
+      this.viewHoSo = obj;
+     // this.keyId = obj.idHoSo;
+      this.loadImageURL(obj.idHoSo);
+      this.getChucVu(obj.chucVu);
+      this.getNgach(obj.maNgach);
+      button.setAttribute('data-bs-target', '#viewModal');
+    }
     if (mode === 'khenthuong') {
       this.editQD = obj;
       //   this.soQuyetDinhGenerateFunc(2023, 'QDKT');
@@ -204,6 +217,10 @@ export class HomeComponent {
     if (mode === 'daotaoboiduong') {
       this.editQD = obj;
       button.setAttribute('data-bs-target', '#dtbdModal');
+    }
+    if (mode === 'nghihuu') {
+      this.editQD = obj;
+      button.setAttribute('data-bs-target', '#viewnghihuuModal');
     }
     // @ts-ignore
     container.appendChild(button);
@@ -380,16 +397,16 @@ export class HomeComponent {
     this.soQuyetDinhGenerate = `${randomNumber}-${year}/${qd}`;
   }
 
-  tenQuyetDinhGenerateFunc(modeMsg: string, hoVaTen: string, maCB: string): void {
-    this.tenQuyetDinhGenerate = `Quyết định ${modeMsg} cán bộ ${hoVaTen} (${maCB})`;
-  }
+  // tenQuyetDinhGenerateFunc(modeMsg: string, hoVaTen: string, maCB: string): void {
+  //   this.tenQuyetDinhGenerate = `Quyết định ${modeMsg} cán bộ ${hoVaTen} (${maCB})`;
+  // }
 
 
   checkboxes = document.getElementsByName('check-box-menu');
   checkedValues: number[] = [];
   HinhThucSelected: any = null;
   donViSelected: DonVi = new DonVi();
-  phongBanSelected: PhongBan = new PhongBan();
+  phongBanSelected: any = '';
   xepLoaiDanhGia: any = null;
   ngayGuiDaoTaoBoiDuong: string = '';
   trangThaiDaoTaoBoiDuongSelected: string = 'Chờ quyết định';
@@ -416,12 +433,12 @@ export class HomeComponent {
     button.setAttribute('data-bs-toggle', 'modal');
     if (mode == 'khenthuong') {
       button.setAttribute('data-bs-target', '#qdktModal');
-      this.soQuyetDinhGenerateFunc(2023, 'QDKT');
+      this.soQuyetDinhGenerateFunc(2023, 'BNV-QDKT');
       //  this.tenQuyetDinhGenerateFunc('khen thưởng', '', '');
     }
     if (mode == 'kyluat') {
       button.setAttribute('data-bs-target', '#qdklModal');
-      this.soQuyetDinhGenerateFunc(2023, 'QDKL');
+      this.soQuyetDinhGenerateFunc(2023, 'BNV-QDKL');
       //   this.tenQuyetDinhGenerateFunc('kỷ luật', '', '');
     }
     if (mode == 'danhgia') {
@@ -432,6 +449,9 @@ export class HomeComponent {
     }
     if (mode == 'daotaoboiduong') {
       button.setAttribute('data-bs-target', '#multidaotaoboiduongModal');
+    }
+    if (mode == 'nghihuu') {
+      button.setAttribute('data-bs-target', '#nghihuuModal');
     }
     // @ts-ignore
     container.appendChild(button);
@@ -537,73 +557,6 @@ export class HomeComponent {
   trinhDoDaoTaoBoiDuong: any = '';
   tenChuyenNganhDaoTaoBoiDuong: any = '';
 
-  // onAddQDMDTBD(addMDTBDForm: NgForm) {
-  //   this.arrHoSoForAddQTDT = [];
-  //   for (let idhoSoItem of this.checkedValues) {
-  //     this.theService.getHoSo(idhoSoItem).subscribe({
-  //       next: value => {
-  //         console.log('HoSo: ' + value.hoVaTen);
-  //         this.quaTrinhDTBDService.addQuaTrinhDaoTaoBoiDuong(this.DTBDForm.value).subscribe({
-  //           next: dataqt => {
-  //             console.info('adddataqt: ' + dataqt.hoSo.hoVaTen);
-  //             this.checkedValues = [];
-  //             this.getListHoSo();
-  //             this.DTBDForm.reset();
-  //           },
-  //           error: errw => {
-  //             console.error('addquatrinh_err: ' + this.DTBDForm.value);
-  //           }
-  //         });
-  // this.theService.updateHoSoDaoTaoBoiDuong(value.idHoSo, addMDTBDForm.value.tuNgay, addMDTBDForm.value.tenChuyenNganhDaoTaoBoiDuong, addMDTBDForm.value.trangThaiDaoTaoBoiDuong)
-  //   .subscribe({
-  //     next: data => {
-  //       console.info('dataUpdateHSQT: ' + data.hoVaTen);
-  //       this.arrHoSoForAddQTDT.push(data);
-  //       this.checkedValues = [];
-  //       this.getListHoSo();
-  //       // @ts-ignore
-  //       document.getElementById('obj-form-mtdtbd').click();
-  //       this.addQuaTrinhDTBD();
-  //     },
-  //     error: errd => {
-  //       console.log('updatehosoQTDT_ERR: ' + errd);
-  //     }
-  //   });
-  //       },
-  //       error: err => {
-  //         console.log(err)
-  //       }
-  //     });
-  //   }
-
-  // };
-  //
-
-  // addQuaTrinhDTBD() {
-  //   const btnSubmit = document.getElementById("submit-qtdt-btn");
-  //   const dtbdForm = document.getElementById("DTBDForm");
-  //
-  //   for (let i = 0; i < this.arrHoSoForAddQTDT.length; i++) {
-  //     if (this.arrHoSoForAddQTDT[i].idHoSo === undefined) {
-  //       continue;
-  //     }
-  //     console.log('arr: ' + this.arrHoSoForAddQTDT.length);
-  //     this.DTBDForm.setValue({
-  //       hoSo: this.arrHoSoForAddQTDT[i],
-  //       tuNgay: this.ngayGuiDaoTaoBoiDuong,
-  //       denNgay: this.denNgayQTDTBD,
-  //       coSoDaoTaoBoiDuong: this.coSoDaoTaoBoiDuong,
-  //       tenChuyenNganhDaoTaoBoiDuong: this.tenChuyenNganhDaoTaoBoiDuong,
-  //       trinhDoDaoTaoBoiDuong: this.trinhDoDaoTaoBoiDuong,
-  //       trangThaiDaoTaoBoiDuong: this.trangThaiDaoTaoBoiDuongSelected,
-  //     });
-  //
-  //     // @ts-ignore
-  //     btnSubmit.click();
-  //
-  //   }
-
-
   addQuaTrinhDTBDForm = new FormGroup({
     hoSo: new FormControl(this.sendHoSo),
     tuNgay: new FormControl(this.ngayGuiDaoTaoBoiDuong),
@@ -614,6 +567,22 @@ export class HomeComponent {
     trangThaiDaoTaoBoiDuong: new FormControl(this.trangThaiDaoTaoBoiDuongSelected)
   });
 
+  imageSrc: any;
+  loadImageURL(idHoSo: any): void {
+    this.theService.getFileData(idHoSo).subscribe({
+      next: (value) => {
+        console.log(value);
+        let blob: Blob = value.body as Blob;
+        // this.imgURL = window.URL.createObjectURL(blob);
+        this.imageSrc = "http://localhost:8009/api/hoso/open/" + idHoSo;
+        this.sanitizer.bypassSecurityTrustResourceUrl(this.imageSrc);
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+    console.log(this.imageSrc);
+  }
 
   onAddQuaTrinhDTBD() {
     for (let argument of this.checkedValues) {
@@ -644,5 +613,77 @@ export class HomeComponent {
     const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
     // @ts-ignore
     this.alertHold(alertPlaceholder, "Đã lưu thông tin đào tạo/ bồi dưỡng!", "success");
+  }
+
+  viewChucVu : ChucVu = new ChucVu();
+  viewNgach: NgachBacLuong = new NgachBacLuong();
+  nDanhGia: any = '';
+  hinhThucNghiHuu: any = '';
+  getChucVu(maChucVu: string) {
+    this.cvService.getChucVu(maChucVu).subscribe({
+      next: value => {
+          this.viewChucVu = value;
+      }
+    });
+  }
+
+  getNgach(maNgach: string) {
+    this.ngachService.getNgachBacLuongByID(maNgach).subscribe({
+      next: value => {
+        this.viewNgach = value;
+      }
+    });
+  }
+
+  onAddNghiHuu(addNHForm: NgForm) {
+    for (let idhoSoItem of this.checkedValues) {
+      this.theService.getHoSo(idhoSoItem).subscribe({
+        next: value => {
+          // @ts-ignore
+          this.theService.updateHoSoNghiHuu(value.idHoSo, addNHForm.value.ngayNghiHuu, addNHForm.value.hinhThucNghiHuu)
+            .subscribe({
+              next: data => {
+                console.log(data)
+                this.checkedValues = [];
+                this.getListHoSo();
+                addNHForm.reset();
+
+              },
+              error: errd => {
+              }
+            });
+          // @ts-ignore
+          document.getElementById('obj-form-nh').click();
+          // let formData = new FormData();
+          // formData.append('file', this.fileUpload);
+        },
+        error: err => {
+          console.log(err)
+        }
+      });
+    }
+    const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    // @ts-ignore
+    this.alertHold(alertPlaceholder, "Đã lập đánh giá!", "success");
+  }
+
+   currentDate = new Date();
+   currentYear = parseInt(this.currentDate.getFullYear().toString());
+  calcAge(ngaySinh: string, gioiTinh: string): boolean {
+   // const styleTD = document.getElementById('td-age');
+    let dateFromNS = new Date(ngaySinh);
+    let getYear = parseInt(dateFromNS.getFullYear().toString());
+    let age = this.currentYear - getYear;
+
+    if(gioiTinh === 'Nam' && age >= 60) {
+      return true;
+    }
+    else if(gioiTinh === 'Nữ' && age >= 55) {
+      return true;
+    }
+    else {
+      return false;
+    }
+
   }
 }

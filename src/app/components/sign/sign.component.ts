@@ -47,8 +47,12 @@ export class SignComponent {
               localStorage.setItem('isLoggedIn', "true");
               localStorage.setItem('token', this.loginForm.controls['username'].value);
               localStorage.setItem('pquyen', String(res.quyen));
-              console.log("Login successful")
-              this.router.navigate([this.returnUrl]).then(r => console.log(r.valueOf()));
+              console.log("Login successful");
+              this.router.navigate([this.returnUrl]).then(r => {
+                document.getElementById('main-container')!.style.backgroundColor = 'rgba(113,217,115,0.3)';
+                window.location.href = this.returnUrl;
+                console.log(r.valueOf());
+              });
 
             } else if (res.kichHoat == 0) {
               this.message = "Tài khoản đã bị vô hiệu hoá. Vui lòng liên hệ quản trị viên!";

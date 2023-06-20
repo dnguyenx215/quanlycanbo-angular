@@ -8,14 +8,21 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active ms-5" aria-current="page" style="cursor: pointer"
+            <a class="nav-link active ms-5" aria-current="page"
+               style="cursor: auto; color: darkred; font-weight: bold; font-size: 18px;"
                (click)="navigate('/dashboard')">
-              <i class="bi bi-house-fill"></i>
-              Trang chủ
+              BỘ NỘI VỤ
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link active ms-5" aria-current="page" style="cursor: pointer"
+               (click)="navigate('/dashboard')">
+              <i class="fa-solid fa-house-chimney"></i>
+              Trang chủ
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active ms-3" aria-current="page" style="cursor: pointer"
                (click)="navigate('/manage')">
               <i class="fa-regular fa-file-lines"></i>
               Hồ sơ
@@ -48,7 +55,8 @@
           </li>
           <li class="nav-item active dropdown ms-3">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-menu-down"></i> Danh mục thông tin
+              <i class="bi bi-menu-down"></i>
+              Danh mục thông tin
             </a>
             <ul class="dropdown-menu">
               <li>
@@ -78,8 +86,8 @@
              href="#" role="button"
              data-bs-toggle="dropdown"
              aria-expanded="false">
-            <i class="bi bi-person-circle"></i>
-            <i id="account-name" class="ms-1" [innerText]="setAccountName()"></i>
+            <i class="fa-solid fa-user-tie" style="font-size: 18px;"></i>
+            <i id="account-name" style="margin-left: 8px;" [innerText]="setAccountName()"></i>
           </a>
           <ul class="dropdown-menu" id="menu-drop-acc">
             <li><a class="dropdown-item" style="cursor: pointer"

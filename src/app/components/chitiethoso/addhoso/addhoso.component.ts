@@ -281,7 +281,7 @@ export class AddhosoComponent {
 
   fileUpload : any;
   donViSelected: DonVi = new DonVi();
-  phongBanSelected: PhongBan = new PhongBan();
+  phongBanSelected: any = '';
   listPhongBan: PhongBan[] = [];
   gioiTinhSelected: any = '';
   customComparePB(o1: PhongBan, o2: PhongBan) {
@@ -339,4 +339,6 @@ export class AddhosoComponent {
   }
 
   protected readonly PhongBan = PhongBan;
+  pcVuotKhungValue: number = 0;
+  pcChucVuValue: number = 0;
 }
